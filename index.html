@@ -2138,7 +2138,7 @@
             return '£' + amount.toLocaleString();
         }
 
-        // Calculate total sales from the sales table
+        // Calculate total sales from the sales table - FIXED: Only within date range
         function getTotalSales() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
@@ -2163,33 +2163,57 @@
             return totalSales;
         }
 
-        // Calculate total staff cost (now based on individual rates)
+        // Calculate total staff cost (now based on individual rates) - FIXED: Only within date range
         function getTotalStaffCost() {
             const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
-            let totalCost = 0;
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
             
-            Object.values(staffAssignments).forEach(assignments => {
-                assignments.forEach(assignment => {
-                    // Handle old data format
-                    const rate = assignment.rate || 15; // Default to £15 if rate doesn't exist
-                    const cost = assignment.cost || (assignment.hours * rate); // Calculate cost if it doesn't exist
-                    totalCost += cost;
-                });
-            });
+            if (!startDate || !endDate) return 0;
+            
+            let totalCost = 0;
+            const currentDate = new Date(startDate);
+            
+            while (currentDate <= endDate) {
+                const dateKey = currentDate.toISOString().split('T')[0];
+                
+                if (staffAssignments[dateKey]) {
+                    staffAssignments[dateKey].forEach(assignment => {
+                        // Handle old data format
+                        const rate = assignment.rate || 15; // Default to £15 if rate doesn't exist
+                        const cost = assignment.cost || (assignment.hours * rate); // Calculate cost if it doesn't exist
+                        totalCost += cost;
+                    });
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
             
             return totalCost;
         }
 
-        // Calculate total supplier cost
+        // Calculate total supplier cost - FIXED: Only within date range
         function getTotalSupplierCost() {
             const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
-            let totalCost = 0;
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
             
-            Object.values(supplierOrders).forEach(orders => {
-                orders.forEach(order => {
-                    totalCost += order.amount;
-                });
-            });
+            if (!startDate || !endDate) return 0;
+            
+            let totalCost = 0;
+            const currentDate = new Date(startDate);
+            
+            while (currentDate <= endDate) {
+                const dateKey = currentDate.toISOString().split('T')[0];
+                
+                if (supplierOrders[dateKey]) {
+                    supplierOrders[dateKey].forEach(order => {
+                        totalCost += order.amount;
+                    });
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
             
             return totalCost;
         }
