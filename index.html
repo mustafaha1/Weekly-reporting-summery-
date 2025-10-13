@@ -337,6 +337,315 @@
             width: 80px;
         }
 
+        .help-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .help-content {
+            line-height: 1.6;
+        }
+
+        .help-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+
+        .help-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .help-item ul {
+            padding-left: 20px;
+        }
+
+        .help-item li {
+            margin-bottom: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .share-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .share-option-btn {
+            padding: 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+
+        .share-option-btn:hover {
+            background: #2980b9;
+        }
+
+        .share-option-btn.email {
+            background: #e74c3c;
+        }
+
+        .share-option-btn.email:hover {
+            background: #c0392b;
+        }
+
+        .share-option-btn.whatsapp {
+            background: #25D366;
+        }
+
+        .share-option-btn.whatsapp:hover {
+            background: #128C7E;
+        }
+
+        .share-option-btn.download {
+            background: #27ae60;
+        }
+
+        .share-option-btn.download:hover {
+            background: #219653;
+        }
+
+        .help-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .help-btn:hover {
+            background: #2980b9;
+        }
+
+        .accounts-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #8e44ad;
+        }
+
+        .account-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .account-controls select,
+        .account-controls input {
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .account-type-btn {
+            background: #9b59b6;
+        }
+
+        .account-type-btn:hover {
+            background: #8e44ad;
+        }
+
+        .account-details {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .account-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 5px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .summary-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+        /* Clock In/Out Section */
+        .time-clock-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .clock-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .clock-status {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .clock-timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 20px 0;
+        }
+
+        .clock-btn {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .clock-in-btn {
+            background: #27ae60;
+            color: white;
+        }
+
+        .clock-in-btn:hover {
+            background: #219653;
+        }
+
+        .clock-out-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .clock-out-btn:hover {
+            background: #c0392b;
+        }
+
+        .clocked-in-status {
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .clocked-out-status {
+            background: #95a5a6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .active-sessions {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+        }
+
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .current-session {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+        }
+
         @media (max-width: 768px) {
             .date-controls {
                 flex-direction: column;
@@ -367,6 +676,37 @@
             .management-card, .staff-supplier-card {
                 min-width: auto;
             }
+            
+            .help-btn {
+                bottom: 10px;
+                right: 10px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .account-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .account-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .clock-controls {
+                flex-direction: column;
+            }
+
+            .clock-timer {
+                font-size: 36px;
+            }
+
+            .session-item {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -374,6 +714,38 @@
     <div class="container">
         <h1>Business Summary Dashboard</h1>
         
+        <!-- Help Button -->
+        <button class="help-btn" onclick="openHelp()">?</button>
+
+        <!-- Time Clock Section -->
+        <div class="time-clock-section">
+            <h2>🕒 Staff Time Clock</h2>
+            <p>Clock in/out for staff with automatic time tracking</p>
+            
+            <div class="clock-controls">
+                <select id="clockStaffSelect">
+                    <!-- Staff options will be populated dynamically -->
+                </select>
+                
+                <input type="number" id="clockHourlyRate" placeholder="Hourly Rate (£)" min="0" step="0.1" class="rate-input">
+                
+                <button class="clock-btn clock-in-btn" id="clockInBtn" onclick="clockIn()">🟢 Clock In</button>
+            </div>
+            
+            <div class="clock-status" id="clockStatus">
+                <div id="currentStatus" class="clocked-out-status">Not Clocked In</div>
+                <div class="clock-timer" id="clockTimer">00:00:00</div>
+                <div id="currentSessionInfo"></div>
+            </div>
+
+            <div class="active-sessions" id="activeSessions" style="display: none;">
+                <h4>Active Clock Sessions</h4>
+                <div id="sessionsList">
+                    <!-- Active sessions will be listed here -->
+                </div>
+            </div>
+        </div>
+
         <div class="management-section">
             <div class="management-card">
                 <h3>Staff Management</h3>
@@ -410,6 +782,57 @@
             </div>
             
             <button onclick="generateReport()">Generate Report</button>
+        </div>
+
+        <!-- Accounts Section -->
+        <div class="accounts-section">
+            <h2>Individual Accounts</h2>
+            <p>View detailed accounts for specific staff or suppliers</p>
+            
+            <div class="account-controls">
+                <select id="accountType">
+                    <option value="staff">Staff Account</option>
+                    <option value="supplier">Supplier Account</option>
+                </select>
+                
+                <select id="accountName">
+                    <!-- Options will be populated dynamically -->
+                </select>
+                
+                <input type="date" id="accountStartDate" placeholder="From Date">
+                <input type="date" id="accountEndDate" placeholder="To Date">
+                
+                <button class="account-type-btn" onclick="loadAccount()">Load Account</button>
+            </div>
+            
+            <div class="account-details" id="accountDetails" style="display: none;">
+                <div class="account-summary" id="accountSummary">
+                    <!-- Summary will be populated here -->
+                </div>
+                
+                <div class="table-container">
+                    <table id="accountTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Hours</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountTableBody">
+                            <!-- Account details will be populated here -->
+                        </tbody>
+                        <tfoot id="accountTableFooter">
+                            <!-- Account totals will be populated here -->
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <button class="share-btn" onclick="shareAccount()" style="margin-top: 15px;">Share Account Statement</button>
+            </div>
         </div>
 
         <div class="data-section">
@@ -557,22 +980,126 @@
             <div class="sharing-inputs">
                 <input type="email" id="partnerEmail" placeholder="Partner Email Address">
                 <button class="share-btn" onclick="addPartner()">Add Partner</button>
-                <button class="share-btn" onclick="shareReport()">Share Report via Email</button>
-                <button class="share-btn" onclick="downloadPDF()">Download as PDF</button>
+                <button class="share-btn" onclick="openShareModal()">Share Report</button>
             </div>
             <div class="partner-list" id="partnerList">
                 <!-- Partner list will be populated here -->
             </div>
         </div>
+
+        <!-- Help Section -->
+        <div class="help-section" id="helpSection" style="display: none;">
+            <h2>How to Use This Dashboard</h2>
+            <div class="help-content">
+                <div class="help-item">
+                    <h4>🕒 Staff Time Clock</h4>
+                    <ul>
+                        <li>Select a staff member from the dropdown (only available staff show up)</li>
+                        <li>Enter their hourly rate</li>
+                        <li>Click "Clock In" to start tracking time</li>
+                        <li>Multiple staff can be clocked in simultaneously</li>
+                        <li>Each staff member gets their own "Clock Out" button</li>
+                        <li>Hours are automatically added to staff assignments when clocking out</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>👤 Individual Accounts</h4>
+                    <ul>
+                        <li>Select "Staff Account" or "Supplier Account"</li>
+                        <li>Choose the specific staff member or supplier</li>
+                        <li>Set the date range for the account period</li>
+                        <li>Click "Load Account" to view detailed breakdown</li>
+                        <li>See total amounts owed and detailed transaction history</li>
+                        <li>Share account statements with staff/suppliers</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>📊 Sales Data Entry</h4>
+                    <ul>
+                        <li>Select your date range using the date pickers</li>
+                        <li>Enter daily sales figures for Shop, Delivery, Online, and Card Payment</li>
+                        <li>Click "Save" for each day to store your data</li>
+                        <li>Click "Generate Report" to update all tables</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>👥 Staff Management</h4>
+                    <ul>
+                        <li>Add staff members using the Staff Management section</li>
+                        <li>Assign staff to specific dates with hours worked and hourly rate</li>
+                        <li>Different staff can have different rates, even on different days</li>
+                        <li>Staff costs are automatically calculated and included in expenses</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>📦 Supplier Management</h4>
+                    <ul>
+                        <li>Add suppliers using the Supplier Management section</li>
+                        <li>Record supplier orders with amounts for specific dates</li>
+                        <li>Supplier costs are automatically totaled and included in expenses</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>💰 Profit Sharing</h4>
+                    <ul>
+                        <li>Add partner email addresses to share profits with</li>
+                        <li>Set the percentage of profit to share with partners</li>
+                        <li>Profit is automatically divided equally among all partners</li>
+                        <li>The remaining profit goes to the owner</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>📤 Sharing & Exporting</h4>
+                    <ul>
+                        <li>Use the Share Report button to export your data</li>
+                        <li>Choose between Email, WhatsApp, or Download options</li>
+                        <li>Download saves as a text file that you can save anywhere</li>
+                        <li>All data is automatically saved in your browser</li>
+                    </ul>
+                </div>
+            </div>
+            <button onclick="closeHelp()" style="margin-top: 20px; width: 100%;">Close Help</button>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Report</h3>
+                <span class="close" onclick="closeShareModal()">&times;</span>
+            </div>
+            <div class="share-options">
+                <button class="share-option-btn email" onclick="shareViaEmail()">
+                    📧 Share via Email
+                </button>
+                <button class="share-option-btn whatsapp" onclick="shareViaWhatsApp()">
+                    💬 Share via WhatsApp
+                </button>
+                <button class="share-option-btn download" onclick="downloadReport()">
+                    💾 Download Report
+                </button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Initialize staff and supplier arrays
+        // Initialize arrays and variables
         let staffMembers = JSON.parse(localStorage.getItem('staffMembers')) || ['John', 'Sarah', 'Mike', 'Emma'];
         let suppliers = JSON.parse(localStorage.getItem('suppliers')) || ['Supplier A', 'Supplier B', 'Supplier C'];
         let partners = JSON.parse(localStorage.getItem('partners')) || [];
-        let partnerPercentage = JSON.parse(localStorage.getItem('partnerPercentage')) || 50; // Default 50%
+        let partnerPercentage = JSON.parse(localStorage.getItem('partnerPercentage')) || 50;
         
+        // Clock system variables
+        let activeClockSessions = JSON.parse(localStorage.getItem('activeClockSessions')) || {};
+        let clockInterval = null;
+
         // Set default dates (current week)
         function setDefaultDates() {
             const today = new Date();
@@ -584,6 +1111,10 @@
             
             document.getElementById('startDate').valueAsDate = startDate;
             document.getElementById('endDate').valueAsDate = endDate;
+            
+            // Set account dates to match main dates
+            document.getElementById('accountStartDate').valueAsDate = startDate;
+            document.getElementById('accountEndDate').valueAsDate = endDate;
             
             // Set partner percentage input
             document.getElementById('partnerPercentage').value = partnerPercentage;
@@ -605,6 +1136,259 @@
             // Render partner list and profit sharing
             renderPartnerList();
             renderProfitSharingTable();
+            
+            // Update account dropdowns
+            updateAccountDropdowns();
+            
+            // Initialize clock system
+            initializeClockSystem();
+        }
+
+        // Clock System Functions - FIXED VERSION
+        function initializeClockSystem() {
+            updateClockStaffSelect();
+            restoreActiveSessions();
+            startClockTimer();
+        }
+
+        function updateClockStaffSelect() {
+            const clockStaffSelect = document.getElementById('clockStaffSelect');
+            clockStaffSelect.innerHTML = '<option value="">Select Staff</option>';
+            
+            staffMembers.forEach(staff => {
+                // Only show staff who are not already clocked in
+                if (!activeClockSessions[staff]) {
+                    const option = document.createElement('option');
+                    option.value = staff;
+                    option.textContent = staff;
+                    clockStaffSelect.appendChild(option);
+                }
+            });
+        }
+
+        function clockIn() {
+            const staffSelect = document.getElementById('clockStaffSelect');
+            const rateInput = document.getElementById('clockHourlyRate');
+            const staff = staffSelect.value;
+            const rate = parseFloat(rateInput.value) || 0;
+            
+            if (!staff) {
+                alert('Please select a staff member');
+                return;
+            }
+            
+            if (rate <= 0) {
+                alert('Please enter a valid hourly rate');
+                return;
+            }
+            
+            // Check if staff is already clocked in
+            if (activeClockSessions[staff]) {
+                alert(`${staff} is already clocked in!`);
+                return;
+            }
+            
+            const now = new Date();
+            const session = {
+                staff: staff,
+                rate: rate,
+                clockInTime: now.getTime(),
+                lastUpdate: now.getTime(),
+                totalSeconds: 0
+            };
+            
+            activeClockSessions[staff] = session;
+            localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
+            
+            // Clear inputs but DON'T hide the clock in button
+            staffSelect.value = '';
+            rateInput.value = '';
+            
+            // Update UI
+            updateActiveSessionsDisplay();
+            updateClockStaffSelect(); // Refresh dropdown to remove clocked-in staff
+            
+            alert(`${staff} clocked in successfully!`);
+        }
+
+        function clockOut(staff) {
+            const session = activeClockSessions[staff];
+            if (!session) {
+                alert('Session data not found');
+                return;
+            }
+            
+            // Calculate final time
+            const now = new Date();
+            const elapsedSeconds = Math.floor((now.getTime() - session.lastUpdate) / 1000);
+            const totalHours = (session.totalSeconds + elapsedSeconds) / 3600;
+            
+            // Add to staff assignments
+            const today = new Date().toISOString().split('T')[0];
+            addClockSessionToAssignments(staff, today, totalHours, session.rate);
+            
+            // Remove from active sessions
+            delete activeClockSessions[staff];
+            localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
+            
+            // Update UI
+            updateActiveSessionsDisplay();
+            updateClockStaffSelect(); // Refresh dropdown to add back clocked-out staff
+            
+            alert(`${staff} clocked out! Total hours: ${totalHours.toFixed(2)}`);
+            
+            // Refresh staff table
+            renderStaffTable();
+        }
+
+        function addClockSessionToAssignments(staff, date, hours, rate) {
+            let staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+            if (!staffAssignments[date]) {
+                staffAssignments[date] = [];
+            }
+            
+            // Check if there's already an entry for this staff on this date
+            const existingIndex = staffAssignments[date].findIndex(assignment => assignment.staff === staff);
+            
+            if (existingIndex !== -1) {
+                // Update existing entry
+                staffAssignments[date][existingIndex].hours += hours;
+                staffAssignments[date][existingIndex].cost = staffAssignments[date][existingIndex].hours * rate;
+            } else {
+                // Add new entry
+                staffAssignments[date].push({
+                    staff: staff,
+                    hours: hours,
+                    rate: rate,
+                    cost: hours * rate,
+                    source: 'time-clock'
+                });
+            }
+            
+            localStorage.setItem('staffAssignments', JSON.stringify(staffAssignments));
+        }
+
+        function startClockTimer() {
+            stopClockTimer(); // Clear any existing interval
+            
+            clockInterval = setInterval(() => {
+                // Update all active sessions
+                Object.keys(activeClockSessions).forEach(staff => {
+                    const session = activeClockSessions[staff];
+                    const now = new Date();
+                    const elapsedSeconds = Math.floor((now.getTime() - session.lastUpdate) / 1000);
+                    
+                    // Update session in storage
+                    session.lastUpdate = now.getTime();
+                    session.totalSeconds += elapsedSeconds;
+                    activeClockSessions[staff] = session;
+                });
+                
+                localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
+                
+                // Update display
+                updateActiveSessionsDisplay();
+            }, 1000);
+        }
+
+        function stopClockTimer() {
+            if (clockInterval) {
+                clearInterval(clockInterval);
+                clockInterval = null;
+            }
+        }
+
+        function restoreActiveSessions() {
+            updateActiveSessionsDisplay();
+        }
+
+        function updateActiveSessionsDisplay() {
+            const sessionsList = document.getElementById('sessionsList');
+            const activeSessionsDiv = document.getElementById('activeSessions');
+            const clockStatus = document.getElementById('clockStatus');
+            const sessions = Object.values(activeClockSessions);
+            
+            if (sessions.length > 0) {
+                sessionsList.innerHTML = '';
+                sessions.forEach(session => {
+                    const totalSeconds = session.totalSeconds + Math.floor((new Date().getTime() - session.lastUpdate) / 1000);
+                    
+                    const hours = Math.floor(totalSeconds / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = totalSeconds % 60;
+                    
+                    const totalHours = (totalSeconds / 3600).toFixed(2);
+                    const totalCost = (totalHours * session.rate).toFixed(2);
+                    
+                    const sessionItem = document.createElement('div');
+                    sessionItem.className = 'session-item';
+                    sessionItem.innerHTML = `
+                        <div>
+                            <strong>${session.staff}</strong><br>
+                            <small>
+                                Time: ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}<br>
+                                Rate: £${session.rate}/hour | Hours: ${totalHours} | Cost: £${totalCost}
+                            </small>
+                        </div>
+                        <button class="clock-btn clock-out-btn" onclick="clockOut('${session.staff}')">🔴 Clock Out</button>
+                    `;
+                    sessionsList.appendChild(sessionItem);
+                });
+                
+                // Update main clock status
+                clockStatus.innerHTML = `
+                    <div class="clocked-in-status">${sessions.length} Staff Clocked In</div>
+                    <div class="clock-timer">Active Sessions</div>
+                    <div><small>Use the buttons below to clock out individual staff</small></div>
+                `;
+                
+                activeSessionsDiv.style.display = 'block';
+            } else {
+                // No active sessions
+                clockStatus.innerHTML = `
+                    <div class="clocked-out-status">Not Clocked In</div>
+                    <div class="clock-timer">00:00:00</div>
+                    <div id="currentSessionInfo"></div>
+                `;
+                activeSessionsDiv.style.display = 'none';
+            }
+        }
+
+        function forceClockOut(staff) {
+            if (confirm(`Force clock out ${staff}? This will save their current hours.`)) {
+                clockOut(staff);
+            }
+        }
+
+        // Update staff management functions to refresh clock dropdown
+        function addStaff() {
+            const newStaffInput = document.getElementById('newStaffName');
+            const newStaffName = newStaffInput.value.trim();
+            
+            if (newStaffName && !staffMembers.includes(newStaffName)) {
+                staffMembers.push(newStaffName);
+                renderStaffList();
+                newStaffInput.value = '';
+                updateAccountDropdowns();
+                updateClockStaffSelect();
+            }
+        }
+
+        function deleteStaff(index) {
+            const staffName = staffMembers[index];
+            
+            // Check if staff is currently clocked in
+            if (activeClockSessions[staffName]) {
+                alert(`Cannot delete ${staffName} while they are clocked in. Please clock them out first.`);
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to delete ${staffName}?`)) {
+                staffMembers.splice(index, 1);
+                renderStaffList();
+                updateAccountDropdowns();
+                updateClockStaffSelect();
+            }
         }
 
         // Render staff list
@@ -627,26 +1411,6 @@
             
             // Save to localStorage
             localStorage.setItem('staffMembers', JSON.stringify(staffMembers));
-        }
-
-        // Add new staff member
-        function addStaff() {
-            const newStaffInput = document.getElementById('newStaffName');
-            const newStaffName = newStaffInput.value.trim();
-            
-            if (newStaffName && !staffMembers.includes(newStaffName)) {
-                staffMembers.push(newStaffName);
-                renderStaffList();
-                newStaffInput.value = '';
-            }
-        }
-
-        // Delete staff member
-        function deleteStaff(index) {
-            if (confirm(`Are you sure you want to delete ${staffMembers[index]}?`)) {
-                staffMembers.splice(index, 1);
-                renderStaffList();
-            }
         }
 
         // Render supplier list
@@ -680,6 +1444,7 @@
                 suppliers.push(newSupplierName);
                 renderSupplierList();
                 newSupplierInput.value = '';
+                updateAccountDropdowns();
             }
         }
 
@@ -688,6 +1453,7 @@
             if (confirm(`Are you sure you want to delete ${suppliers[index]}?`)) {
                 suppliers.splice(index, 1);
                 renderSupplierList();
+                updateAccountDropdowns();
             }
         }
 
@@ -715,6 +1481,257 @@
                 option.textContent = supplier;
                 supplierSelect.appendChild(option);
             });
+        }
+
+        // Update account dropdowns
+        function updateAccountDropdowns() {
+            const accountNameSelect = document.getElementById('accountName');
+            const accountType = document.getElementById('accountType').value;
+            
+            accountNameSelect.innerHTML = '';
+            
+            if (accountType === 'staff') {
+                staffMembers.forEach(staff => {
+                    const option = document.createElement('option');
+                    option.value = staff;
+                    option.textContent = staff;
+                    accountNameSelect.appendChild(option);
+                });
+            } else {
+                suppliers.forEach(supplier => {
+                    const option = document.createElement('option');
+                    option.value = supplier;
+                    option.textContent = supplier;
+                    accountNameSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Load individual account
+        function loadAccount() {
+            const accountType = document.getElementById('accountType').value;
+            const accountName = document.getElementById('accountName').value;
+            const startDate = document.getElementById('accountStartDate').value;
+            const endDate = document.getElementById('accountEndDate').value;
+            
+            if (!accountName || !startDate || !endDate) {
+                alert('Please select an account name and date range');
+                return;
+            }
+            
+            if (new Date(startDate) > new Date(endDate)) {
+                alert('Start date cannot be after end date');
+                return;
+            }
+            
+            const accountDetails = document.getElementById('accountDetails');
+            const accountSummary = document.getElementById('accountSummary');
+            const accountTableBody = document.getElementById('accountTableBody');
+            const accountTableFooter = document.getElementById('accountTableFooter');
+            
+            // Clear previous data
+            accountSummary.innerHTML = '';
+            accountTableBody.innerHTML = '';
+            accountTableFooter.innerHTML = '';
+            
+            let totalAmount = 0;
+            let totalHours = 0;
+            let transactionCount = 0;
+            
+            if (accountType === 'staff') {
+                // Load staff account
+                const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+                const currentDate = new Date(startDate);
+                
+                while (currentDate <= new Date(endDate)) {
+                    const dateKey = currentDate.toISOString().split('T')[0];
+                    const dateStr = currentDate.toLocaleDateString();
+                    
+                    if (staffAssignments[dateKey]) {
+                        staffAssignments[dateKey].forEach(assignment => {
+                            if (assignment.staff === accountName) {
+                                const rate = assignment.rate || 15;
+                                const cost = assignment.cost || (assignment.hours * rate);
+                                
+                                totalAmount += cost;
+                                totalHours += assignment.hours;
+                                transactionCount++;
+                                
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${dateStr}</td>
+                                    <td>Work Assignment</td>
+                                    <td>${assignment.hours}</td>
+                                    <td>£${rate.toFixed(2)}</td>
+                                    <td>£${cost.toFixed(2)}</td>
+                                    <td>£${cost.toFixed(2)}</td>
+                                `;
+                                accountTableBody.appendChild(row);
+                            }
+                        });
+                    }
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                // Update summary
+                accountSummary.innerHTML = `
+                    <div class="summary-item">
+                        <div class="summary-value">${totalHours.toFixed(1)}</div>
+                        <div class="summary-label">Total Hours</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${transactionCount}</div>
+                        <div class="summary-label">Work Days</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">£${totalAmount.toFixed(2)}</div>
+                        <div class="summary-label">Total Payable</div>
+                    </div>
+                `;
+                
+            } else {
+                // Load supplier account
+                const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
+                const currentDate = new Date(startDate);
+                
+                while (currentDate <= new Date(endDate)) {
+                    const dateKey = currentDate.toISOString().split('T')[0];
+                    const dateStr = currentDate.toLocaleDateString();
+                    
+                    if (supplierOrders[dateKey]) {
+                        supplierOrders[dateKey].forEach(order => {
+                            if (order.supplier === accountName) {
+                                totalAmount += order.amount;
+                                transactionCount++;
+                                
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td>${dateStr}</td>
+                                    <td>Delivery/Supply</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>£${order.amount.toFixed(2)}</td>
+                                    <td>£${order.amount.toFixed(2)}</td>
+                                `;
+                                accountTableBody.appendChild(row);
+                            }
+                        });
+                    }
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                // Update summary
+                accountSummary.innerHTML = `
+                    <div class="summary-item">
+                        <div class="summary-value">${transactionCount}</div>
+                        <div class="summary-label">Deliveries</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">£${totalAmount.toFixed(2)}</div>
+                        <div class="summary-label">Total Payable</div>
+                    </div>
+                `;
+            }
+            
+            // Add totals row
+            const totalsRow = document.createElement('tr');
+            totalsRow.className = 'total-row';
+            totalsRow.innerHTML = `
+                <td colspan="4"><strong>TOTAL</strong></td>
+                <td><strong>£${totalAmount.toFixed(2)}</strong></td>
+                <td><strong>£${totalAmount.toFixed(2)}</strong></td>
+            `;
+            accountTableFooter.appendChild(totalsRow);
+            
+            // Show account details
+            accountDetails.style.display = 'block';
+        }
+
+        // Share account statement
+        function shareAccount() {
+            const accountType = document.getElementById('accountType').value;
+            const accountName = document.getElementById('accountName').value;
+            const startDate = document.getElementById('accountStartDate').value;
+            const endDate = document.getElementById('accountEndDate').value;
+            
+            let accountData = '';
+            let totalAmount = 0;
+            
+            if (accountType === 'staff') {
+                const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+                const currentDate = new Date(startDate);
+                
+                accountData = `STAFF ACCOUNT STATEMENT\n`;
+                accountData += `Staff: ${accountName}\n`;
+                accountData += `Period: ${startDate} to ${endDate}\n\n`;
+                accountData += `DATE\t\tHOURS\tRATE\tAMOUNT\n`;
+                accountData += `----\t\t-----\t----\t------\n`;
+                
+                while (currentDate <= new Date(endDate)) {
+                    const dateKey = currentDate.toISOString().split('T')[0];
+                    const dateStr = currentDate.toLocaleDateString();
+                    
+                    if (staffAssignments[dateKey]) {
+                        staffAssignments[dateKey].forEach(assignment => {
+                            if (assignment.staff === accountName) {
+                                const rate = assignment.rate || 15;
+                                const cost = assignment.cost || (assignment.hours * rate);
+                                totalAmount += cost;
+                                
+                                accountData += `${dateStr}\t${assignment.hours}\t£${rate.toFixed(2)}\t£${cost.toFixed(2)}\n`;
+                            }
+                        });
+                    }
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                accountData += `\nTOTAL PAYABLE: £${totalAmount.toFixed(2)}`;
+                
+            } else {
+                const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
+                const currentDate = new Date(startDate);
+                
+                accountData = `SUPPLIER ACCOUNT STATEMENT\n`;
+                accountData += `Supplier: ${accountName}\n`;
+                accountData += `Period: ${startDate} to ${endDate}\n\n`;
+                accountData += `DATE\t\tAMOUNT\n`;
+                accountData += `----\t\t------\n`;
+                
+                while (currentDate <= new Date(endDate)) {
+                    const dateKey = currentDate.toISOString().split('T')[0];
+                    const dateStr = currentDate.toLocaleDateString();
+                    
+                    if (supplierOrders[dateKey]) {
+                        supplierOrders[dateKey].forEach(order => {
+                            if (order.supplier === accountName) {
+                                totalAmount += order.amount;
+                                accountData += `${dateStr}\t£${order.amount.toFixed(2)}\n`;
+                            }
+                        });
+                    }
+                    
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+                
+                accountData += `\nTOTAL PAYABLE: £${totalAmount.toFixed(2)}`;
+            }
+            
+            // Create and download file
+            const blob = new Blob([accountData], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const filename = `${accountName}_Account_${startDate}_to_${endDate}.txt`;
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Account statement for ${accountName} downloaded!`);
         }
 
         // Update date selects for staff and supplier tables
@@ -1345,41 +2362,6 @@
             }
         }
 
-        // Share report via email (simulated)
-        function shareReport() {
-            if (partners.length === 0) {
-                alert('Please add at least one partner email address');
-                return;
-            }
-            
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-            const totalSales = getTotalSales();
-            const totalStaffCost = getTotalStaffCost();
-            const totalSupplierCost = getTotalSupplierCost();
-            const profit = getNetProfit();
-            const partnerShare = (profit * partnerPercentage) / 100;
-            const sharePerPartner = partnerShare / partners.length;
-            
-            // Build profit sharing details
-            let profitSharingDetails = '\n\nPROFIT SHARING DISTRIBUTION:\n';
-            profitSharingDetails += `- Total Partner Share: ${partnerPercentage}% (${formatCurrency(partnerShare)})\n`;
-            profitSharingDetails += `- Share per Partner: ${formatCurrency(sharePerPartner)}\n`;
-            profitSharingDetails += `- Owner Share: ${(100 - partnerPercentage).toFixed(1)}% (${formatCurrency(profit - partnerShare)})`;
-            
-            // In a real application, this would send an actual email
-            // For this demo, we'll just show a confirmation
-            const emailList = partners.join(', ');
-            alert(`Report shared with: ${emailList}\n\nSummary:\n- Period: ${startDate} to ${endDate}\n- Total Sales: ${formatCurrency(totalSales)}\n- Staff Costs: ${formatCurrency(totalStaffCost)}\n- Supplier Costs: ${formatCurrency(totalSupplierCost)}\n- Net Profit: ${formatCurrency(profit)}${profitSharingDetails}`);
-        }
-
-        // Download as PDF (simulated)
-        function downloadPDF() {
-            // In a real application, this would generate an actual PDF
-            // For this demo, we'll just show a confirmation
-            alert('PDF report downloaded successfully!');
-        }
-
         // Generate the report
         function generateReport() {
             const startDate = new Date(document.getElementById('startDate').value);
@@ -1480,6 +2462,123 @@
             renderProfitSharingTable();
         }
 
+        // Help Section Functions
+        function openHelp() {
+            document.getElementById('helpSection').style.display = 'block';
+        }
+
+        function closeHelp() {
+            document.getElementById('helpSection').style.display = 'none';
+        }
+
+        // Share Modal Functions
+        function openShareModal() {
+            document.getElementById('shareModal').style.display = 'block';
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('shareModal');
+            if (event.target === modal) {
+                closeShareModal();
+            }
+        }
+
+        // Enhanced Sharing Functions
+        function shareViaEmail() {
+            const reportData = generateReportData();
+            const subject = `Business Report - ${reportData.startDate} to ${reportData.endDate}`;
+            const body = formatReportForSharing(reportData);
+            
+            const mailtoLink = `mailto:${partners.join(',')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+            closeShareModal();
+        }
+
+        function shareViaWhatsApp() {
+            const reportData = generateReportData();
+            const message = formatReportForSharing(reportData);
+            const whatsappLink = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappLink, '_blank');
+            closeShareModal();
+        }
+
+        function downloadReport() {
+            const reportData = generateReportData();
+            const content = formatReportForSharing(reportData);
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            const filename = `Business_Report_${reportData.startDate}_to_${reportData.endDate}.txt`;
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Report downloaded as: ${filename}`);
+            closeShareModal();
+        }
+
+        function generateReportData() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const totalSales = getTotalSales();
+            const totalStaffCost = getTotalStaffCost();
+            const totalSupplierCost = getTotalSupplierCost();
+            const profit = getNetProfit();
+            const partnerShare = (profit * partnerPercentage) / 100;
+            const sharePerPartner = partners.length > 0 ? partnerShare / partners.length : 0;
+
+            return {
+                startDate,
+                endDate,
+                totalSales,
+                totalStaffCost,
+                totalSupplierCost,
+                profit,
+                partnerPercentage,
+                partnerShare,
+                sharePerPartner,
+                partners
+            };
+        }
+
+        function formatReportForSharing(data) {
+            let report = `BUSINESS REPORT\n`;
+            report += `Period: ${data.startDate} to ${data.endDate}\n\n`;
+            
+            report += `FINANCIAL SUMMARY:\n`;
+            report += `Total Sales: ${formatCurrency(data.totalSales)}\n`;
+            report += `Staff Costs: ${formatCurrency(data.totalStaffCost)}\n`;
+            report += `Supplier Costs: ${formatCurrency(data.totalSupplierCost)}\n`;
+            report += `Net Profit: ${formatCurrency(data.profit)}\n\n`;
+            
+            if (data.partners.length > 0) {
+                report += `PROFIT SHARING:\n`;
+                report += `Partner Share: ${data.partnerPercentage}% (${formatCurrency(data.partnerShare)})\n`;
+                report += `Share per Partner: ${formatCurrency(data.sharePerPartner)}\n`;
+                report += `Owner Share: ${(100 - data.partnerPercentage).toFixed(1)}% (${formatCurrency(data.profit - data.partnerShare)})\n\n`;
+                
+                report += `PARTNERS:\n`;
+                data.partners.forEach(partner => {
+                    report += `• ${partner}\n`;
+                });
+            }
+            
+            report += `\nGenerated on: ${new Date().toLocaleDateString()}`;
+            return report;
+        }
+
+        // Update account dropdown when type changes
+        document.getElementById('accountType').addEventListener('change', updateAccountDropdowns);
+
         // Initialize the app
         window.onload = function() {
             setDefaultDates();
@@ -1492,6 +2591,11 @@
             
             document.getElementById('endDate').addEventListener('change', function() {
                 generateDataInputs();
+            });
+
+            // Save clock sessions before page unload
+            window.addEventListener('beforeunload', function() {
+                // Sessions are automatically saved every second by the timer
             });
         };
     </script>
