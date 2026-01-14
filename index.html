@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Summary Dashboard - COMPLETE WITH RECOVERY</title>
+    <title>Business Summary Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -29,60 +29,6 @@
         h1, h2, h3 {
             color: #2c3e50;
             margin-bottom: 20px;
-        }
-
-        .emergency-banner {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 5px solid #fff;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
-        }
-
-        .emergency-banner h2 {
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .emergency-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 15px;
-        }
-
-        .emergency-btn {
-            padding: 12px 20px;
-            background: white;
-            color: #e74c3c;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .emergency-btn:hover {
-            background: #f8f9fa;
-            transform: translateY(-2px);
-        }
-
-        .emergency-btn.backup {
-            background: #27ae60;
-            color: white;
-        }
-
-        .emergency-btn.backup:hover {
-            background: #219653;
         }
 
         .date-controls {
@@ -700,47 +646,27 @@
             border-left: 4px solid #27ae60;
         }
 
-        .recovery-panel {
+        .recovery-section {
             margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px solid #3498db;
-        }
-
-        .recovery-status {
             padding: 15px;
-            background: white;
+            background: #f8f9fa;
             border-radius: 5px;
-            margin-top: 15px;
-            font-family: monospace;
-            font-size: 13px;
-            line-height: 1.5;
-            max-height: 300px;
-            overflow-y: auto;
-            white-space: pre-wrap;
+            border: 1px dashed #e74c3c;
         }
 
-        .recovery-step {
+        .recovery-section h3 {
+            color: #e74c3c;
+        }
+
+        .recovery-buttons {
             display: flex;
-            align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
+            flex-wrap: wrap;
         }
 
-        .step-number {
-            background: #3498db;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+        .recovery-btn {
+            padding: 10px 15px;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
@@ -805,7 +731,7 @@
                 text-align: center;
             }
 
-            .emergency-buttons {
+            .recovery-buttons {
                 flex-direction: column;
             }
         }
@@ -813,51 +739,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- EMERGENCY DATA RECOVERY BANNER -->
-        <div class="emergency-banner" id="emergencyBanner">
-            <h2>⚠️ EMERGENCY DATA RECOVERY MODE</h2>
-            <p>Your old data has been detected but isn't loading. Follow these steps to recover it:</p>
-            <div class="emergency-buttons">
-                <button class="emergency-btn backup" onclick="createEmergencyBackup()">1. CREATE EMERGENCY BACKUP</button>
-                <button class="emergency-btn" onclick="autoRecoverAllData()">2. AUTO RECOVER ALL DATA</button>
-                <button class="emergency-btn" onclick="scanAndFixLocalStorage()">3. SCAN & FIX CORRUPTION</button>
-                <button class="emergency-btn" onclick="forceLoadOldData()">4. FORCE LOAD OLD DATA</button>
-            </div>
-        </div>
-
-        <!-- Recovery Status Panel -->
-        <div class="recovery-panel">
-            <h3>🛠️ Data Recovery Status</h3>
-            <div class="recovery-step">
-                <div class="step-number">1</div>
-                <div>
-                    <strong>Click "CREATE EMERGENCY BACKUP"</strong> - This saves ALL your data to a file before recovery
-                </div>
-            </div>
-            <div class="recovery-step">
-                <div class="step-number">2</div>
-                <div>
-                    <strong>Click "AUTO RECOVER ALL DATA"</strong> - Automatically finds and recovers your old data
-                </div>
-            </div>
-            <div class="recovery-step">
-                <div class="step-number">3</div>
-                <div>
-                    <strong>Wait for completion</strong> - The system will restore your staff, suppliers, sales, and all other data
-                </div>
-            </div>
-            
-            <div id="recoveryStatus" class="recovery-status">
-                Ready to recover your data. Click step 1 above to start.
-            </div>
-            
-            <div style="margin-top: 15px; display: flex; gap: 10px;">
-                <button onclick="showWhatsInLocalStorage()" style="background: #3498db;">Show All Saved Data</button>
-                <button onclick="runDeepRecovery()" style="background: #9b59b6;">Deep Recovery Scan</button>
-                <button onclick="resetAndRestore()" style="background: #e74c3c;">Reset & Restore</button>
-            </div>
-        </div>
-
         <h1>Business Summary Dashboard</h1>
         
         <!-- Help Button -->
@@ -1133,21 +1014,25 @@
             </div>
         </div>
 
+        <!-- Data Recovery Section -->
+        <div class="recovery-section">
+            <h3>🛠️ Data Recovery Tools</h3>
+            <p style="margin-bottom: 10px; color: #7f8c8d; font-size: 14px;">
+                <strong>If data is not loading:</strong> Try these recovery options. Your existing data will be backed up first.
+            </p>
+            <div class="recovery-buttons">
+                <button class="recovery-btn" onclick="recoverLocalStorageData()" style="background: #3498db;">Check Data Integrity</button>
+                <button class="recovery-btn" onclick="backupAllData()" style="background: #2ecc71;">Backup All Data</button>
+                <button class="recovery-btn" onclick="restoreFromBackup()" style="background: #f39c12;">Restore from Backup</button>
+                <button class="recovery-btn" onclick="clearAllData()" style="background: #e74c3c;">Clear All Data (Reset)</button>
+            </div>
+            <div id="recoveryStatus" style="margin-top: 10px; font-size: 13px; color: #7f8c8d;"></div>
+        </div>
+
         <!-- Help Section -->
         <div class="help-section" id="helpSection" style="display: none;">
             <h2>How to Use This Dashboard</h2>
             <div class="help-content">
-                <div class="help-item">
-                    <h4>🛠️ EMERGENCY DATA RECOVERY</h4>
-                    <ul>
-                        <li><strong>Step 1: CREATE EMERGENCY BACKUP</strong> - This saves ALL your data to a file immediately</li>
-                        <li><strong>Step 2: AUTO RECOVER ALL DATA</strong> - The system will automatically find and restore your old data</li>
-                        <li><strong>Step 3: SCAN & FIX CORRUPTION</strong> - Fixes common data corruption issues</li>
-                        <li><strong>Step 4: FORCE LOAD OLD DATA</strong> - Forces the system to load data from old backups</li>
-                        <li>Your data is SAFE and will be recovered automatically on page load</li>
-                    </ul>
-                </div>
-
                 <div class="help-item">
                     <h4>🕒 Staff Time Clock</h4>
                     <ul>
@@ -1200,6 +1085,26 @@
                         <li>Supplier costs are automatically totaled and included in expenses</li>
                     </ul>
                 </div>
+
+                <div class="help-item">
+                    <h4>💰 Profit Sharing</h4>
+                    <ul>
+                        <li>Add partner email addresses to share profits with</li>
+                        <li>Set the percentage of profit to share with partners</li>
+                        <li>Profit is automatically divided equally among all partners</li>
+                        <li>The remaining profit goes to the owner</li>
+                    </ul>
+                </div>
+
+                <div class="help-item">
+                    <h4>📤 Sharing & Exporting</h4>
+                    <ul>
+                        <li>Use the Share Report button to export your data</li>
+                        <li>Choose between Email, WhatsApp, or Download options</li>
+                        <li>Download saves as a text file that you can save anywhere</li>
+                        <li>All data is automatically saved in your browser</li>
+                    </ul>
+                </div>
             </div>
             <button onclick="closeHelp()" style="margin-top: 20px; width: 100%;">Close Help</button>
         </div>
@@ -1227,463 +1132,182 @@
     </div>
 
     <script>
-        // ==================== EMERGENCY DATA RECOVERY SYSTEM ====================
-        
-        // Auto-run recovery when page loads
-        (function autoRecoverOnLoad() {
-            console.log("🚀 AUTO RECOVERY SYSTEM STARTING...");
-            
-            // Check if there's any data in localStorage
-            let hasData = false;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && (key.includes('staff') || key.includes('supplier') || key.includes('salesData') || key.includes('partner'))) {
-                    hasData = true;
-                    break;
-                }
-            }
-            
-            if (hasData) {
-                console.log("📦 Found existing data in localStorage");
-                setTimeout(() => {
-                    autoRecoverAllData();
-                }, 1000);
-            } else {
-                console.log("📭 No existing data found in localStorage");
-                document.getElementById('recoveryStatus').innerHTML = 
-                    "No existing data found. Please enter new data or restore from backup.";
-            }
-        })();
-
-        // ==================== EMERGENCY RECOVERY FUNCTIONS ====================
-
-        function createEmergencyBackup() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "🔄 Creating emergency backup...\n";
-            
-            const backup = {};
-            const keys = [];
-            
-            // Collect ALL data from localStorage
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                keys.push(key);
-                try {
-                    const value = localStorage.getItem(key);
-                    backup[key] = value;
-                    status.innerHTML += `✓ Backed up: ${key}\n`;
-                } catch (e) {
-                    status.innerHTML += `✗ Error backing up ${key}: ${e.message}\n`;
-                }
-            }
-            
-            // Create backup file
-            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            a.download = `EMERGENCY_BACKUP_${timestamp}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            status.innerHTML += `\n✅ EMERGENCY BACKUP CREATED!\n`;
-            status.innerHTML += `File: ${a.download}\n`;
-            status.innerHTML += `Items backed up: ${keys.length}\n`;
-            status.innerHTML += `⚠️ KEEP THIS FILE SAFE! It contains ALL your business data.`;
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function autoRecoverAllData() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "🔄 AUTO RECOVERY STARTED...\n\n";
-            
-            let recoveredItems = 0;
-            
-            // STEP 1: Find and fix ALL data in localStorage
-            const allKeys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                allKeys.push(localStorage.key(i));
-            }
-            
-            status.innerHTML += `📊 Found ${allKeys.length} items in localStorage\n`;
-            
-            // STEP 2: Try to recover each data type
-            const recoverySteps = [
-                { name: 'Staff Members', keys: ['staffMembers', 'staff', 'employees', 'workers'] },
-                { name: 'Suppliers', keys: ['suppliers', 'vendor', 'supplierList'] },
-                { name: 'Staff Assignments', keys: ['staffAssignments', 'assignments', 'staffHours'] },
-                { name: 'Supplier Orders', keys: ['supplierOrders', 'orders', 'purchases'] },
-                { name: 'Partners', keys: ['partners', 'partnerList'] },
-                { name: 'Percentage', keys: ['partnerPercentage', 'percentage', 'sharePercentage'] }
-            ];
-            
-            recoverySteps.forEach(step => {
-                status.innerHTML += `\n🔍 Looking for ${step.name}...\n`;
-                
-                step.keys.forEach(keyPattern => {
-                    // Check for exact matches
-                    if (localStorage.getItem(keyPattern)) {
-                        try {
-                            const data = JSON.parse(localStorage.getItem(keyPattern));
-                            // Save with standard name
-                            localStorage.setItem(step.keys[0], JSON.stringify(data));
-                            status.innerHTML += `   ✓ Recovered ${step.name} from '${keyPattern}'\n`;
-                            recoveredItems++;
-                        } catch (e) {
-                            status.innerHTML += `   ✗ Error parsing '${keyPattern}': ${e.message}\n`;
-                        }
-                    }
-                    
-                    // Check for partial matches
-                    allKeys.forEach(key => {
-                        if (key.toLowerCase().includes(keyPattern.toLowerCase()) && key !== step.keys[0]) {
-                            try {
-                                const data = JSON.parse(localStorage.getItem(key));
-                                localStorage.setItem(step.keys[0], JSON.stringify(data));
-                                status.innerHTML += `   ✓ Recovered ${step.name} from '${key}'\n`;
-                                recoveredItems++;
-                            } catch (e) {
-                                // Try to fix common JSON issues
-                                try {
-                                    const raw = localStorage.getItem(key);
-                                    const fixed = fixJSON(raw);
-                                    const data = JSON.parse(fixed);
-                                    localStorage.setItem(step.keys[0], JSON.stringify(data));
-                                    status.innerHTML += `   ✓ Fixed & recovered ${step.name} from '${key}'\n`;
-                                    recoveredItems++;
-                                } catch (e2) {
-                                    status.innerHTML += `   ✗ Could not recover from '${key}'\n`;
-                                }
-                            }
-                        }
-                    });
-                });
-            });
-            
-            // STEP 3: Find and recover sales data
-            let salesCount = 0;
-            allKeys.forEach(key => {
-                if (key.startsWith('salesData-') || key.includes('sales-') || key.includes('day-')) {
-                    salesCount++;
-                }
-            });
-            
-            if (salesCount > 0) {
-                status.innerHTML += `\n💰 Found ${salesCount} days of sales data\n`;
-                recoveredItems++;
-            }
-            
-            // STEP 4: Initialize the dashboard with recovered data
-            status.innerHTML += `\n🔄 Initializing dashboard with recovered data...\n`;
-            
-            // Force reload the page to apply recovered data
-            setTimeout(() => {
-                status.innerHTML += `\n✅ AUTO RECOVERY COMPLETE!\n`;
-                status.innerHTML += `Recovered ${recoveredItems} data types\n`;
-                status.innerHTML += `Reloading page in 3 seconds...`;
-                
-                setTimeout(() => {
-                    location.reload();
-                }, 3000);
-            }, 1000);
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function fixJSON(badJSON) {
-            if (!badJSON) return '{}';
-            
-            let fixed = badJSON;
-            
-            // Fix common JSON issues
-            fixed = fixed.replace(/,\s*}/g, '}');
-            fixed = fixed.replace(/,\s*]/g, ']');
-            fixed = fixed.replace(/'/g, '"');
-            fixed = fixed.replace(/(\w+):/g, '"$1":');
-            fixed = fixed.replace(/:\s*'([^']+)'/g, ': "$1"');
-            fixed = fixed.replace(/:\s*([^,\]}]+)(?=[,\]}])/g, ': "$1"');
-            
-            return fixed;
-        }
-
-        function scanAndFixLocalStorage() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "🔧 Scanning and fixing localStorage...\n\n";
-            
-            let fixedCount = 0;
-            let errorCount = 0;
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                try {
-                    const value = localStorage.getItem(key);
-                    JSON.parse(value);
-                    status.innerHTML += `✓ ${key}: Valid JSON\n`;
-                } catch (e) {
-                    status.innerHTML += `✗ ${key}: Corrupted - ${e.message}\n`;
-                    
-                    // Try to fix it
-                    try {
-                        const value = localStorage.getItem(key);
-                        const fixed = fixJSON(value);
-                        JSON.parse(fixed); // Test if it works
-                        localStorage.setItem(key, fixed);
-                        status.innerHTML += `   → Fixed!\n`;
-                        fixedCount++;
-                    } catch (e2) {
-                        status.innerHTML += `   → Could not fix\n`;
-                        errorCount++;
-                    }
-                }
-            }
-            
-            status.innerHTML += `\n📊 RESULTS:\n`;
-            status.innerHTML += `Fixed: ${fixedCount} items\n`;
-            status.innerHTML += `Errors: ${errorCount} items\n`;
-            status.innerHTML += `Total: ${localStorage.length} items\n\n`;
-            
-            if (errorCount > 0) {
-                status.innerHTML += `⚠ Some items could not be fixed. Use "Force Load Old Data" or restore from backup.\n`;
-            } else {
-                status.innerHTML += `✅ All data is now valid! Reloading page...\n`;
-                setTimeout(() => location.reload(), 2000);
-            }
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function forceLoadOldData() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "💪 FORCING LOAD OF OLD DATA...\n\n";
-            
-            // Look for ANY data that looks like business data
-            const potentialData = {};
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                
-                // Check if this looks like business data
-                if (key.includes('staff') || key.includes('supplier') || key.includes('sales') || 
-                    key.includes('partner') || key.includes('assign') || key.includes('order')) {
-                    
-                    try {
-                        const parsed = JSON.parse(value);
-                        potentialData[key] = parsed;
-                        status.innerHTML += `✓ Found: ${key}\n`;
-                    } catch (e) {
-                        // Try to fix it
-                        try {
-                            const fixed = fixJSON(value);
-                            const parsed = JSON.parse(fixed);
-                            potentialData[key] = parsed;
-                            localStorage.setItem(key, fixed);
-                            status.innerHTML += `✓ Fixed & found: ${key}\n`;
-                        } catch (e2) {
-                            status.innerHTML += `✗ Could not parse: ${key}\n`;
-                        }
-                    }
-                }
-            }
-            
-            // Now try to intelligently assign the data
-            if (potentialData['staffMembers'] || potentialData['staff']) {
-                const staff = potentialData['staffMembers'] || potentialData['staff'] || [];
-                localStorage.setItem('staffMembers', JSON.stringify(staff));
-                status.innerHTML += `\n✅ Loaded ${staff.length} staff members\n`;
-            }
-            
-            if (potentialData['suppliers'] || potentialData['supplier']) {
-                const suppliers = potentialData['suppliers'] || potentialData['supplier'] || [];
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
-                status.innerHTML += `✅ Loaded ${suppliers.length} suppliers\n`;
-            }
-            
-            // Find sales data
-            let salesDays = 0;
-            Object.keys(potentialData).forEach(key => {
-                if (key.startsWith('salesData-')) {
-                    salesDays++;
-                }
-            });
-            
-            if (salesDays > 0) {
-                status.innerHTML += `✅ Found ${salesDays} days of sales data\n`;
-            }
-            
-            status.innerHTML += `\n🎉 OLD DATA LOADED SUCCESSFULLY!\n`;
-            status.innerHTML += `Reloading page in 3 seconds...\n`;
-            
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function showWhatsInLocalStorage() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "📋 CONTENTS OF LOCALSTORAGE:\n\n";
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                
-                status.innerHTML += `${i+1}. ${key}:\n`;
-                
-                try {
-                    const parsed = JSON.parse(value);
-                    if (Array.isArray(parsed)) {
-                        status.innerHTML += `   [Array with ${parsed.length} items]\n`;
-                    } else if (typeof parsed === 'object') {
-                        const keys = Object.keys(parsed);
-                        status.innerHTML += `   {Object with ${keys.length} keys}\n`;
-                    } else {
-                        status.innerHTML += `   ${parsed}\n`;
-                    }
-                } catch (e) {
-                    status.innerHTML += `   [INVALID JSON] Length: ${value.length} chars\n`;
-                }
-                
-                status.innerHTML += `\n`;
-            }
-            
-            status.innerHTML += `\n📊 TOTAL: ${localStorage.length} items in localStorage\n`;
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function runDeepRecovery() {
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "🔬 RUNNING DEEP RECOVERY SCAN...\n\n";
-            
-            let reconstructed = 0;
-            
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const value = localStorage.getItem(key);
-                
-                // Skip if it's already valid JSON
-                try {
-                    JSON.parse(value);
-                    continue;
-                } catch (e) {
-                    status.innerHTML += `🔍 Scanning: ${key}\n`;
-                    
-                    // Look for staff names
-                    const staffMatches = value.match(/["']?[A-Z][a-z]+["']?(?:\s+["']?[A-Z][a-z]+["']?)?/g);
-                    if (staffMatches && staffMatches.length > 2) {
-                        const staffList = staffMatches.map(name => name.replace(/["']/g, '').trim()).filter(name => name.length > 1);
-                        localStorage.setItem('staffMembers', JSON.stringify(staffList));
-                        status.innerHTML += `   → Extracted ${staffList.length} staff names\n`;
-                        reconstructed++;
-                    }
-                    
-                    // Look for sales data patterns
-                    const dateMatches = value.match(/\d{4}-\d{2}-\d{2}/g);
-                    if (dateMatches) {
-                        dateMatches.forEach(date => {
-                            const salesData = {
-                                shop: 0,
-                                delivery: 0,
-                                online: 0,
-                                cardPayment: 0
-                            };
-                            localStorage.setItem(`salesData-${date}`, JSON.stringify(salesData));
-                            status.innerHTML += `   → Created sales entry for ${date}\n`;
-                            reconstructed++;
-                        });
-                    }
-                }
-            }
-            
-            status.innerHTML += `\n🎯 DEEP RECOVERY COMPLETE!\n`;
-            status.innerHTML += `Reconstructed ${reconstructed} data items\n`;
-            status.innerHTML += `Reloading page...\n`;
-            
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        function resetAndRestore() {
-            if (!confirm('⚠️ WARNING: This will reset ALL current data and attempt to restore from any backups found in localStorage. Continue?')) {
-                return;
-            }
-            
-            const status = document.getElementById('recoveryStatus');
-            status.innerHTML = "🔄 RESETTING AND RESTORING...\n\n";
-            
-            // First, backup current state
-            const currentBackup = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                currentBackup[key] = localStorage.getItem(key);
-            }
-            localStorage.setItem(`pre_reset_backup_${Date.now()}`, JSON.stringify(currentBackup));
-            
-            // Clear everything
-            localStorage.clear();
-            
-            // Now look for backup entries and restore them
-            const backupKeys = Object.keys(currentBackup).filter(key => 
-                key.includes('backup') || key.includes('corrupted') || key.includes('old_')
-            );
-            
-            backupKeys.forEach(key => {
-                try {
-                    const data = JSON.parse(currentBackup[key]);
-                    if (typeof data === 'object') {
-                        if (data['staffMembers'] || data['suppliers']) {
-                            Object.keys(data).forEach(k => {
-                                localStorage.setItem(k, data[k]);
-                            });
-                            status.innerHTML += `✓ Restored full backup from ${key}\n`;
-                        }
-                    }
-                } catch (e) {
-                    // Not a JSON backup
-                }
-            });
-            
-            status.innerHTML += `\n✅ RESET AND RESTORE COMPLETE!\n`;
-            status.innerHTML += `Restored from ${backupKeys.length} backup sources\n`;
-            status.innerHTML += `Reloading page...\n`;
-            
-            setTimeout(() => {
-                location.reload();
-            }, 2000);
-            
-            status.scrollTop = status.scrollHeight;
-        }
-
-        // ==================== ORIGINAL DASHBOARD FUNCTIONS ====================
-        
-        // Safe localStorage parsing
+        // ==================== UTILITY FUNCTIONS ====================
+        // Safe localStorage parsing with error handling
         function getLocalStorageItem(key, defaultValue) {
             try {
                 const item = localStorage.getItem(key);
-                if (item === null) return defaultValue;
-                return JSON.parse(item);
+                return item ? JSON.parse(item) : defaultValue;
             } catch (e) {
-                console.error(`Error parsing ${key}:`, e);
+                console.error(`Error parsing ${key} from localStorage:`, e);
+                // Create a backup before returning default
+                const corruptedData = localStorage.getItem(key);
+                if (corruptedData) {
+                    localStorage.setItem(`${key}_corrupted_${Date.now()}`, corruptedData);
+                }
+                localStorage.removeItem(key);
                 return defaultValue;
             }
         }
 
-        // Initialize variables with recovery
+        // Format currency
+        function formatCurrency(amount) {
+            return '£' + amount.toLocaleString();
+        }
+
+        // ==================== INITIALIZE VARIABLES ====================
         let staffMembers = getLocalStorageItem('staffMembers', ['John', 'Sarah', 'Mike', 'Emma']);
         let suppliers = getLocalStorageItem('suppliers', ['Supplier A', 'Supplier B', 'Supplier C']);
         let partners = getLocalStorageItem('partners', []);
         let partnerPercentage = getLocalStorageItem('partnerPercentage', 50);
         let activeClockSessions = getLocalStorageItem('activeClockSessions', {});
         let clockInterval = null;
+
+        // ==================== DATA RECOVERY FUNCTIONS ====================
+        function recoverLocalStorageData() {
+            const statusDiv = document.getElementById('recoveryStatus');
+            statusDiv.innerHTML = '<span style="color: #3498db;">Checking data integrity...</span>';
+            
+            console.log("Checking localStorage for corrupted data...");
+            
+            const keysToCheck = [
+                'staffMembers', 'suppliers', 'partners', 'partnerPercentage',
+                'staffAssignments', 'supplierOrders', 'activeClockSessions'
+            ];
+            
+            let corruptedCount = 0;
+            
+            keysToCheck.forEach(key => {
+                const item = localStorage.getItem(key);
+                if (item) {
+                    try {
+                        JSON.parse(item);
+                        console.log(`✓ ${key}: Valid JSON`);
+                    } catch (e) {
+                        corruptedCount++;
+                        console.error(`✗ ${key}: Corrupted JSON - ${e.message}`);
+                        // Backup corrupted data
+                        const backupKey = `${key}_backup_${Date.now()}`;
+                        localStorage.setItem(backupKey, item);
+                        localStorage.removeItem(key);
+                    }
+                }
+            });
+            
+            // Check sales data
+            const salesKeys = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('salesData-')) {
+                    try {
+                        JSON.parse(localStorage.getItem(key));
+                        console.log(`✓ ${key}: Valid JSON`);
+                    } catch (e) {
+                        corruptedCount++;
+                        console.error(`✗ ${key}: Corrupted JSON - ${e.message}`);
+                        localStorage.removeItem(key);
+                    }
+                }
+            }
+            
+            if (corruptedCount > 0) {
+                statusDiv.innerHTML = `<span style="color: #e74c3c;">Found and fixed ${corruptedCount} corrupted data items. Page will reload...</span>`;
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            } else {
+                statusDiv.innerHTML = '<span style="color: #27ae60;">✓ All data is valid and intact.</span>';
+            }
+            
+            console.log("Data recovery complete");
+        }
+
+        function backupAllData() {
+            const statusDiv = document.getElementById('recoveryStatus');
+            statusDiv.innerHTML = '<span style="color: #3498db;">Creating backup...</span>';
+            
+            const backup = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!key.includes('_backup_') && !key.includes('_corrupted_')) {
+                    backup[key] = localStorage.getItem(key);
+                }
+            }
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            a.download = `business_dashboard_backup_${timestamp}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            statusDiv.innerHTML = `<span style="color: #27ae60;">✓ Backup created with ${Object.keys(backup).length} items saved.</span>`;
+        }
+
+        function restoreFromBackup() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const backup = JSON.parse(e.target.result);
+                        
+                        // Create backup of current data first
+                        const currentBackup = {};
+                        for (let i = 0; i < localStorage.length; i++) {
+                            const key = localStorage.key(i);
+                            currentBackup[key] = localStorage.getItem(key);
+                        }
+                        localStorage.setItem(`pre_restore_backup_${Date.now()}`, JSON.stringify(currentBackup));
+                        
+                        // Clear existing data
+                        localStorage.clear();
+                        
+                        // Restore from backup
+                        Object.keys(backup).forEach(key => {
+                            localStorage.setItem(key, backup[key]);
+                        });
+                        
+                        const statusDiv = document.getElementById('recoveryStatus');
+                        statusDiv.innerHTML = `<span style="color: #27ae60;">✓ Restored ${Object.keys(backup).length} items from backup. Page will reload...</span>`;
+                        
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    } catch (error) {
+                        alert('Invalid backup file format');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will clear ALL saved data including staff, suppliers, sales, and clock sessions. A backup will be created first.\n\nAre you sure?')) {
+                // Create backup before clearing
+                const backup = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    backup[key] = localStorage.getItem(key);
+                }
+                localStorage.setItem(`pre_clear_backup_${Date.now()}`, JSON.stringify(backup));
+                
+                localStorage.clear();
+                const statusDiv = document.getElementById('recoveryStatus');
+                statusDiv.innerHTML = '<span style="color: #e74c3c;">All data cleared. Page will reload...</span>';
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }
+        }
 
         // ==================== CLOCK SYSTEM FUNCTIONS ====================
         function initializeClockSystem() {
@@ -1964,30 +1588,6 @@
             updateSupplierSelect();
         }
 
-        function updateStaffSelect() {
-            const staffSelect = document.getElementById('staffSelect');
-            staffSelect.innerHTML = '<option value="">Select Staff</option>';
-            
-            staffMembers.forEach(staff => {
-                const option = document.createElement('option');
-                option.value = staff;
-                option.textContent = staff;
-                staffSelect.appendChild(option);
-            });
-        }
-
-        function updateSupplierSelect() {
-            const supplierSelect = document.getElementById('supplierSelect');
-            supplierSelect.innerHTML = '<option value="">Select Supplier</option>';
-            
-            suppliers.forEach(supplier => {
-                const option = document.createElement('option');
-                option.value = supplier;
-                option.textContent = supplier;
-                supplierSelect.appendChild(option);
-            });
-        }
-
         // ==================== DATA ENTRY FUNCTIONS ====================
         function setDefaultDates() {
             try {
@@ -2019,6 +1619,8 @@
                 
             } catch (error) {
                 console.error("Error in setDefaultDates:", error);
+                document.getElementById('recoveryStatus').innerHTML = 
+                    '<span style="color: #e74c3c;">Error loading dashboard. Try using recovery tools.</span>';
             }
         }
 
@@ -2087,6 +1689,54 @@
                 } catch (e) {
                     console.error(`Error loading data for ${dateKey}:`, e);
                 }
+            }
+        }
+
+        // ==================== TABLE FUNCTIONS ====================
+        function updateStaffSelect() {
+            const staffSelect = document.getElementById('staffSelect');
+            staffSelect.innerHTML = '<option value="">Select Staff</option>';
+            
+            staffMembers.forEach(staff => {
+                const option = document.createElement('option');
+                option.value = staff;
+                option.textContent = staff;
+                staffSelect.appendChild(option);
+            });
+        }
+
+        function updateSupplierSelect() {
+            const supplierSelect = document.getElementById('supplierSelect');
+            supplierSelect.innerHTML = '<option value="">Select Supplier</option>';
+            
+            suppliers.forEach(supplier => {
+                const option = document.createElement('option');
+                option.value = supplier;
+                option.textContent = supplier;
+                supplierSelect.appendChild(option);
+            });
+        }
+
+        function updateAccountDropdowns() {
+            const accountNameSelect = document.getElementById('accountName');
+            const accountType = document.getElementById('accountType').value;
+            
+            accountNameSelect.innerHTML = '';
+            
+            if (accountType === 'staff') {
+                staffMembers.forEach(staff => {
+                    const option = document.createElement('option');
+                    option.value = staff;
+                    option.textContent = staff;
+                    accountNameSelect.appendChild(option);
+                });
+            } else {
+                suppliers.forEach(supplier => {
+                    const option = document.createElement('option');
+                    option.value = supplier;
+                    option.textContent = supplier;
+                    accountNameSelect.appendChild(option);
+                });
             }
         }
 
@@ -2471,29 +2121,6 @@
         }
 
         // ==================== ACCOUNT FUNCTIONS ====================
-        function updateAccountDropdowns() {
-            const accountNameSelect = document.getElementById('accountName');
-            const accountType = document.getElementById('accountType').value;
-            
-            accountNameSelect.innerHTML = '';
-            
-            if (accountType === 'staff') {
-                staffMembers.forEach(staff => {
-                    const option = document.createElement('option');
-                    option.value = staff;
-                    option.textContent = staff;
-                    accountNameSelect.appendChild(option);
-                });
-            } else {
-                suppliers.forEach(supplier => {
-                    const option = document.createElement('option');
-                    option.value = supplier;
-                    option.textContent = supplier;
-                    accountNameSelect.appendChild(option);
-                });
-            }
-        }
-
         function loadAccount() {
             const accountType = document.getElementById('accountType').value;
             const accountName = document.getElementById('accountName').value;
@@ -2712,10 +2339,6 @@
         }
 
         // ==================== SUMMARY & PROFIT FUNCTIONS ====================
-        function formatCurrency(amount) {
-            return '£' + amount.toLocaleString();
-        }
-
         function getTotalSales() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
@@ -3066,32 +2689,20 @@
         document.getElementById('accountType').addEventListener('change', updateAccountDropdowns);
 
         window.onload = function() {
-            console.log("🚀 Dashboard loading with emergency recovery...");
+            console.log("Loading dashboard with data recovery...");
             
-            // Auto-run recovery on load if data is corrupted
-            setTimeout(() => {
-                // Check if main data arrays are empty
-                if (staffMembers.length === 0 && suppliers.length === 0) {
-                    document.getElementById('recoveryStatus').innerHTML = 
-                        "⚠️ No data found. Click 'AUTO RECOVER ALL DATA' to restore your old data.";
-                } else {
-                    document.getElementById('recoveryStatus').innerHTML = 
-                        `✅ Data loaded successfully!\nStaff: ${staffMembers.length}\nSuppliers: ${suppliers.length}`;
-                    
-                    // Hide emergency banner after 5 seconds if data is loaded
-                    setTimeout(() => {
-                        document.getElementById('emergencyBanner').style.display = 'none';
-                    }, 5000);
-                }
-            }, 1000);
+            // Run data integrity check first
+            recoverLocalStorageData();
             
-            // Initialize the dashboard
+            // Initialize dashboard
             setDefaultDates();
             
             try {
                 generateReport();
             } catch (e) {
                 console.error("Error generating report:", e);
+                document.getElementById('recoveryStatus').innerHTML = 
+                    '<span style="color: #e74c3c;">Error loading report data. Try using "Check Data Integrity".</span>';
             }
             
             // Event listeners
@@ -3101,6 +2712,11 @@
             
             document.getElementById('endDate').addEventListener('change', function() {
                 generateDataInputs();
+            });
+
+            window.addEventListener('beforeunload', function() {
+                stopClockTimer();
+                console.log("Page unloading - saving state");
             });
         };
     </script>
