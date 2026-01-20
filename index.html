@@ -646,29 +646,6 @@
             border-left: 4px solid #27ae60;
         }
 
-        .recovery-section {
-            margin-top: 30px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            border: 1px dashed #e74c3c;
-        }
-
-        .recovery-section h3 {
-            color: #e74c3c;
-        }
-
-        .recovery-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .recovery-btn {
-            padding: 10px 15px;
-            font-size: 14px;
-        }
-
         @media (max-width: 768px) {
             .date-controls {
                 flex-direction: column;
@@ -729,10 +706,6 @@
                 flex-direction: column;
                 gap: 10px;
                 text-align: center;
-            }
-
-            .recovery-buttons {
-                flex-direction: column;
             }
         }
     </style>
@@ -1014,21 +987,6 @@
             </div>
         </div>
 
-        <!-- Data Recovery Section -->
-        <div class="recovery-section">
-            <h3>🛠️ Data Recovery Tools</h3>
-            <p style="margin-bottom: 10px; color: #7f8c8d; font-size: 14px;">
-                <strong>If data is not loading:</strong> Try these recovery options. Your existing data will be backed up first.
-            </p>
-            <div class="recovery-buttons">
-                <button class="recovery-btn" onclick="recoverLocalStorageData()" style="background: #3498db;">Check Data Integrity</button>
-                <button class="recovery-btn" onclick="backupAllData()" style="background: #2ecc71;">Backup All Data</button>
-                <button class="recovery-btn" onclick="restoreFromBackup()" style="background: #f39c12;">Restore from Backup</button>
-                <button class="recovery-btn" onclick="clearAllData()" style="background: #e74c3c;">Clear All Data (Reset)</button>
-            </div>
-            <div id="recoveryStatus" style="margin-top: 10px; font-size: 13px; color: #7f8c8d;"></div>
-        </div>
-
         <!-- Help Section -->
         <div class="help-section" id="helpSection" style="display: none;">
             <h2>How to Use This Dashboard</h2>
@@ -1132,184 +1090,61 @@
     </div>
 
     <script>
-        // ==================== UTILITY FUNCTIONS ====================
-        // Safe localStorage parsing with error handling
-        function getLocalStorageItem(key, defaultValue) {
-            try {
-                const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : defaultValue;
-            } catch (e) {
-                console.error(`Error parsing ${key} from localStorage:`, e);
-                // Create a backup before returning default
-                const corruptedData = localStorage.getItem(key);
-                if (corruptedData) {
-                    localStorage.setItem(`${key}_corrupted_${Date.now()}`, corruptedData);
-                }
-                localStorage.removeItem(key);
-                return defaultValue;
-            }
-        }
-
-        // Format currency
-        function formatCurrency(amount) {
-            return '£' + amount.toLocaleString();
-        }
-
-        // ==================== INITIALIZE VARIABLES ====================
-        let staffMembers = getLocalStorageItem('staffMembers', ['John', 'Sarah', 'Mike', 'Emma']);
-        let suppliers = getLocalStorageItem('suppliers', ['Supplier A', 'Supplier B', 'Supplier C']);
-        let partners = getLocalStorageItem('partners', []);
-        let partnerPercentage = getLocalStorageItem('partnerPercentage', 50);
-        let activeClockSessions = getLocalStorageItem('activeClockSessions', {});
+        // Initialize arrays and variables
+        let staffMembers = JSON.parse(localStorage.getItem('staffMembers')) || ['John', 'Sarah', 'Mike', 'Emma'];
+        let suppliers = JSON.parse(localStorage.getItem('suppliers')) || ['Supplier A', 'Supplier B', 'Supplier C'];
+        let partners = JSON.parse(localStorage.getItem('partners')) || [];
+        let partnerPercentage = JSON.parse(localStorage.getItem('partnerPercentage')) || 50;
+        
+        // Clock system variables
+        let activeClockSessions = JSON.parse(localStorage.getItem('activeClockSessions')) || {};
         let clockInterval = null;
 
-        // ==================== DATA RECOVERY FUNCTIONS ====================
-        function recoverLocalStorageData() {
-            const statusDiv = document.getElementById('recoveryStatus');
-            statusDiv.innerHTML = '<span style="color: #3498db;">Checking data integrity...</span>';
+        // Set default dates (current week)
+        function setDefaultDates() {
+            const today = new Date();
+            const startDate = new Date(today);
+            startDate.setDate(today.getDate() - today.getDay() + 1); // Start from Monday
             
-            console.log("Checking localStorage for corrupted data...");
+            const endDate = new Date(today);
+            endDate.setDate(startDate.getDate() + 6); // End on Sunday
             
-            const keysToCheck = [
-                'staffMembers', 'suppliers', 'partners', 'partnerPercentage',
-                'staffAssignments', 'supplierOrders', 'activeClockSessions'
-            ];
+            document.getElementById('startDate').valueAsDate = startDate;
+            document.getElementById('endDate').valueAsDate = endDate;
             
-            let corruptedCount = 0;
+            // Set account dates to match main dates
+            document.getElementById('accountStartDate').valueAsDate = startDate;
+            document.getElementById('accountEndDate').valueAsDate = endDate;
             
-            keysToCheck.forEach(key => {
-                const item = localStorage.getItem(key);
-                if (item) {
-                    try {
-                        JSON.parse(item);
-                        console.log(`✓ ${key}: Valid JSON`);
-                    } catch (e) {
-                        corruptedCount++;
-                        console.error(`✗ ${key}: Corrupted JSON - ${e.message}`);
-                        // Backup corrupted data
-                        const backupKey = `${key}_backup_${Date.now()}`;
-                        localStorage.setItem(backupKey, item);
-                        localStorage.removeItem(key);
-                    }
-                }
-            });
+            // Set partner percentage input
+            document.getElementById('partnerPercentage').value = partnerPercentage;
             
-            // Check sales data
-            const salesKeys = [];
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key.startsWith('salesData-')) {
-                    try {
-                        JSON.parse(localStorage.getItem(key));
-                        console.log(`✓ ${key}: Valid JSON`);
-                    } catch (e) {
-                        corruptedCount++;
-                        console.error(`✗ ${key}: Corrupted JSON - ${e.message}`);
-                        localStorage.removeItem(key);
-                    }
-                }
-            }
+            // Generate input fields for the default date range
+            generateDataInputs();
             
-            if (corruptedCount > 0) {
-                statusDiv.innerHTML = `<span style="color: #e74c3c;">Found and fixed ${corruptedCount} corrupted data items. Page will reload...</span>`;
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-            } else {
-                statusDiv.innerHTML = '<span style="color: #27ae60;">✓ All data is valid and intact.</span>';
-            }
+            // Render staff and supplier lists
+            renderStaffList();
+            renderSupplierList();
             
-            console.log("Data recovery complete");
+            // Update date selects for staff and supplier tables
+            updateDateSelects();
+            
+            // Render staff and supplier tables
+            renderStaffTable();
+            renderSupplierTable();
+            
+            // Render partner list and profit sharing
+            renderPartnerList();
+            renderProfitSharingTable();
+            
+            // Update account dropdowns
+            updateAccountDropdowns();
+            
+            // Initialize clock system
+            initializeClockSystem();
         }
 
-        function backupAllData() {
-            const statusDiv = document.getElementById('recoveryStatus');
-            statusDiv.innerHTML = '<span style="color: #3498db;">Creating backup...</span>';
-            
-            const backup = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (!key.includes('_backup_') && !key.includes('_corrupted_')) {
-                    backup[key] = localStorage.getItem(key);
-                }
-            }
-            
-            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            a.download = `business_dashboard_backup_${timestamp}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            statusDiv.innerHTML = `<span style="color: #27ae60;">✓ Backup created with ${Object.keys(backup).length} items saved.</span>`;
-        }
-
-        function restoreFromBackup() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = function(event) {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const backup = JSON.parse(e.target.result);
-                        
-                        // Create backup of current data first
-                        const currentBackup = {};
-                        for (let i = 0; i < localStorage.length; i++) {
-                            const key = localStorage.key(i);
-                            currentBackup[key] = localStorage.getItem(key);
-                        }
-                        localStorage.setItem(`pre_restore_backup_${Date.now()}`, JSON.stringify(currentBackup));
-                        
-                        // Clear existing data
-                        localStorage.clear();
-                        
-                        // Restore from backup
-                        Object.keys(backup).forEach(key => {
-                            localStorage.setItem(key, backup[key]);
-                        });
-                        
-                        const statusDiv = document.getElementById('recoveryStatus');
-                        statusDiv.innerHTML = `<span style="color: #27ae60;">✓ Restored ${Object.keys(backup).length} items from backup. Page will reload...</span>`;
-                        
-                        setTimeout(() => {
-                            location.reload();
-                        }, 2000);
-                    } catch (error) {
-                        alert('Invalid backup file format');
-                    }
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function clearAllData() {
-            if (confirm('⚠️ WARNING: This will clear ALL saved data including staff, suppliers, sales, and clock sessions. A backup will be created first.\n\nAre you sure?')) {
-                // Create backup before clearing
-                const backup = {};
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    backup[key] = localStorage.getItem(key);
-                }
-                localStorage.setItem(`pre_clear_backup_${Date.now()}`, JSON.stringify(backup));
-                
-                localStorage.clear();
-                const statusDiv = document.getElementById('recoveryStatus');
-                statusDiv.innerHTML = '<span style="color: #e74c3c;">All data cleared. Page will reload...</span>';
-                setTimeout(() => {
-                    location.reload();
-                }, 2000);
-            }
-        }
-
-        // ==================== CLOCK SYSTEM FUNCTIONS ====================
+        // Clock System Functions - FIXED VERSION
         function initializeClockSystem() {
             updateClockStaffSelect();
             restoreActiveSessions();
@@ -1321,6 +1156,7 @@
             clockStaffSelect.innerHTML = '<option value="">Select Staff</option>';
             
             staffMembers.forEach(staff => {
+                // Only show staff who are not already clocked in
                 if (!activeClockSessions[staff]) {
                     const option = document.createElement('option');
                     option.value = staff;
@@ -1346,6 +1182,7 @@
                 return;
             }
             
+            // Check if staff is already clocked in
             if (activeClockSessions[staff]) {
                 alert(`${staff} is already clocked in!`);
                 return;
@@ -1363,11 +1200,13 @@
             activeClockSessions[staff] = session;
             localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
             
+            // Clear inputs but DON'T hide the clock in button
             staffSelect.value = '';
             rateInput.value = '';
             
+            // Update UI
             updateActiveSessionsDisplay();
-            updateClockStaffSelect();
+            updateClockStaffSelect(); // Refresh dropdown to remove clocked-in staff
             
             alert(`${staff} clocked in successfully!`);
         }
@@ -1379,35 +1218,44 @@
                 return;
             }
             
+            // Calculate final time
             const now = new Date();
             const elapsedSeconds = Math.floor((now.getTime() - session.lastUpdate) / 1000);
             const totalHours = (session.totalSeconds + elapsedSeconds) / 3600;
             
+            // Add to staff assignments
             const today = new Date().toISOString().split('T')[0];
             addClockSessionToAssignments(staff, today, totalHours, session.rate);
             
+            // Remove from active sessions
             delete activeClockSessions[staff];
             localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
             
+            // Update UI
             updateActiveSessionsDisplay();
-            updateClockStaffSelect();
+            updateClockStaffSelect(); // Refresh dropdown to add back clocked-out staff
             
             alert(`${staff} clocked out! Total hours: ${totalHours.toFixed(2)}`);
+            
+            // Refresh staff table
             renderStaffTable();
         }
 
         function addClockSessionToAssignments(staff, date, hours, rate) {
-            let staffAssignments = getLocalStorageItem('staffAssignments', {});
+            let staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
             if (!staffAssignments[date]) {
                 staffAssignments[date] = [];
             }
             
+            // Check if there's already an entry for this staff on this date
             const existingIndex = staffAssignments[date].findIndex(assignment => assignment.staff === staff);
             
             if (existingIndex !== -1) {
+                // Update existing entry
                 staffAssignments[date][existingIndex].hours += hours;
                 staffAssignments[date][existingIndex].cost = staffAssignments[date][existingIndex].hours * rate;
             } else {
+                // Add new entry
                 staffAssignments[date].push({
                     staff: staff,
                     hours: hours,
@@ -1421,20 +1269,24 @@
         }
 
         function startClockTimer() {
-            stopClockTimer();
+            stopClockTimer(); // Clear any existing interval
             
             clockInterval = setInterval(() => {
+                // Update all active sessions
                 Object.keys(activeClockSessions).forEach(staff => {
                     const session = activeClockSessions[staff];
                     const now = new Date();
                     const elapsedSeconds = Math.floor((now.getTime() - session.lastUpdate) / 1000);
                     
+                    // Update session in storage
                     session.lastUpdate = now.getTime();
                     session.totalSeconds += elapsedSeconds;
                     activeClockSessions[staff] = session;
                 });
                 
                 localStorage.setItem('activeClockSessions', JSON.stringify(activeClockSessions));
+                
+                // Update display
                 updateActiveSessionsDisplay();
             }, 1000);
         }
@@ -1483,6 +1335,7 @@
                     sessionsList.appendChild(sessionItem);
                 });
                 
+                // Update main clock status
                 clockStatus.innerHTML = `
                     <div class="clocked-in-status">${sessions.length} Staff Clocked In</div>
                     <div class="clock-timer">Active Sessions</div>
@@ -1491,6 +1344,7 @@
                 
                 activeSessionsDiv.style.display = 'block';
             } else {
+                // No active sessions
                 clockStatus.innerHTML = `
                     <div class="clocked-out-status">Not Clocked In</div>
                     <div class="clock-timer">00:00:00</div>
@@ -1500,7 +1354,13 @@
             }
         }
 
-        // ==================== STAFF & SUPPLIER MANAGEMENT ====================
+        function forceClockOut(staff) {
+            if (confirm(`Force clock out ${staff}? This will save their current hours.`)) {
+                clockOut(staff);
+            }
+        }
+
+        // Update staff management functions to refresh clock dropdown
         function addStaff() {
             const newStaffInput = document.getElementById('newStaffName');
             const newStaffName = newStaffInput.value.trim();
@@ -1511,13 +1371,13 @@
                 newStaffInput.value = '';
                 updateAccountDropdowns();
                 updateClockStaffSelect();
-                localStorage.setItem('staffMembers', JSON.stringify(staffMembers));
             }
         }
 
         function deleteStaff(index) {
             const staffName = staffMembers[index];
             
+            // Check if staff is currently clocked in
             if (activeClockSessions[staffName]) {
                 alert(`Cannot delete ${staffName} while they are clocked in. Please clock them out first.`);
                 return;
@@ -1528,10 +1388,10 @@
                 renderStaffList();
                 updateAccountDropdowns();
                 updateClockStaffSelect();
-                localStorage.setItem('staffMembers', JSON.stringify(staffMembers));
             }
         }
 
+        // Render staff list
         function renderStaffList() {
             const staffList = document.getElementById('staffList');
             staffList.innerHTML = '';
@@ -1546,31 +1406,14 @@
                 staffList.appendChild(listItem);
             });
             
+            // Update staff select dropdown
             updateStaffSelect();
-        }
-
-        function addSupplier() {
-            const newSupplierInput = document.getElementById('newSupplierName');
-            const newSupplierName = newSupplierInput.value.trim();
             
-            if (newSupplierName && !suppliers.includes(newSupplierName)) {
-                suppliers.push(newSupplierName);
-                renderSupplierList();
-                newSupplierInput.value = '';
-                updateAccountDropdowns();
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
-            }
+            // Save to localStorage
+            localStorage.setItem('staffMembers', JSON.stringify(staffMembers));
         }
 
-        function deleteSupplier(index) {
-            if (confirm(`Are you sure you want to delete ${suppliers[index]}?`)) {
-                suppliers.splice(index, 1);
-                renderSupplierList();
-                updateAccountDropdowns();
-                localStorage.setItem('suppliers', JSON.stringify(suppliers));
-            }
-        }
-
+        // Render supplier list
         function renderSupplierList() {
             const supplierList = document.getElementById('supplierList');
             supplierList.innerHTML = '';
@@ -1585,114 +1428,36 @@
                 supplierList.appendChild(listItem);
             });
             
+            // Update supplier select dropdown
             updateSupplierSelect();
+            
+            // Save to localStorage
+            localStorage.setItem('suppliers', JSON.stringify(suppliers));
         }
 
-        // ==================== DATA ENTRY FUNCTIONS ====================
-        function setDefaultDates() {
-            try {
-                const today = new Date();
-                const startDate = new Date(today);
-                startDate.setDate(today.getDate() - today.getDay() + 1);
-                
-                const endDate = new Date(today);
-                endDate.setDate(startDate.getDate() + 6);
-                
-                document.getElementById('startDate').valueAsDate = startDate;
-                document.getElementById('endDate').valueAsDate = endDate;
-                document.getElementById('accountStartDate').valueAsDate = startDate;
-                document.getElementById('accountEndDate').valueAsDate = endDate;
-                document.getElementById('partnerPercentage').value = partnerPercentage;
-                
-                generateDataInputs();
-                renderStaffList();
+        // Add new supplier
+        function addSupplier() {
+            const newSupplierInput = document.getElementById('newSupplierName');
+            const newSupplierName = newSupplierInput.value.trim();
+            
+            if (newSupplierName && !suppliers.includes(newSupplierName)) {
+                suppliers.push(newSupplierName);
                 renderSupplierList();
-                updateDateSelects();
-                renderStaffTable();
-                renderSupplierTable();
-                renderPartnerList();
-                renderProfitSharingTable();
+                newSupplierInput.value = '';
                 updateAccountDropdowns();
-                initializeClockSystem();
-                
-                console.log("Dashboard initialized successfully");
-                
-            } catch (error) {
-                console.error("Error in setDefaultDates:", error);
-                document.getElementById('recoveryStatus').innerHTML = 
-                    '<span style="color: #e74c3c;">Error loading dashboard. Try using recovery tools.</span>';
             }
         }
 
-        function generateDataInputs() {
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            
-            if (!startDate || !endDate) return;
-            
-            const dataInputsContainer = document.getElementById('dataInputs');
-            dataInputsContainer.innerHTML = '';
-            
-            const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            
-            const currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                const dayName = daysOfWeek[currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1];
-                const dateStr = currentDate.toLocaleDateString();
-                const dateKey = currentDate.toISOString().split('T')[0];
-                
-                const dayContainer = document.createElement('div');
-                dayContainer.className = 'data-row';
-                dayContainer.innerHTML = `
-                    <div class="data-label">${dayName} (${dateStr})</div>
-                    <input type="number" class="data-input" id="shop-${dateKey}" placeholder="Shop" min="0">
-                    <input type="number" class="data-input" id="delivery-${dateKey}" placeholder="Delivery" min="0">
-                    <input type="number" class="data-input" id="online-${dateKey}" placeholder="Online" min="0">
-                    <input type="number" class="data-input" id="card-${dateKey}" placeholder="Card Payment" min="0">
-                    <button class="save-btn" onclick="saveDayData('${dateKey}')">Save</button>
-                `;
-                
-                dataInputsContainer.appendChild(dayContainer);
-                loadSavedData(dateKey);
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            updateDateSelects();
-        }
-
-        function saveDayData(dateKey) {
-            const shop = document.getElementById(`shop-${dateKey}`).value || 0;
-            const delivery = document.getElementById(`delivery-${dateKey}`).value || 0;
-            const online = document.getElementById(`online-${dateKey}`).value || 0;
-            const card = document.getElementById(`card-${dateKey}`).value || 0;
-            
-            const dayData = {
-                shop: parseFloat(shop),
-                delivery: parseFloat(delivery),
-                online: parseFloat(online),
-                cardPayment: parseFloat(card)
-            };
-            
-            localStorage.setItem(`salesData-${dateKey}`, JSON.stringify(dayData));
-            alert('Sales data saved for ' + new Date(dateKey).toLocaleDateString());
-        }
-
-        function loadSavedData(dateKey) {
-            const savedData = localStorage.getItem(`salesData-${dateKey}`);
-            if (savedData) {
-                try {
-                    const data = JSON.parse(savedData);
-                    document.getElementById(`shop-${dateKey}`).value = data.shop;
-                    document.getElementById(`delivery-${dateKey}`).value = data.delivery;
-                    document.getElementById(`online-${dateKey}`).value = data.online;
-                    document.getElementById(`card-${dateKey}`).value = data.cardPayment;
-                } catch (e) {
-                    console.error(`Error loading data for ${dateKey}:`, e);
-                }
+        // Delete supplier
+        function deleteSupplier(index) {
+            if (confirm(`Are you sure you want to delete ${suppliers[index]}?`)) {
+                suppliers.splice(index, 1);
+                renderSupplierList();
+                updateAccountDropdowns();
             }
         }
 
-        // ==================== TABLE FUNCTIONS ====================
+        // Update staff select dropdown
         function updateStaffSelect() {
             const staffSelect = document.getElementById('staffSelect');
             staffSelect.innerHTML = '<option value="">Select Staff</option>';
@@ -1705,6 +1470,7 @@
             });
         }
 
+        // Update supplier select dropdown
         function updateSupplierSelect() {
             const supplierSelect = document.getElementById('supplierSelect');
             supplierSelect.innerHTML = '<option value="">Select Supplier</option>';
@@ -1717,6 +1483,7 @@
             });
         }
 
+        // Update account dropdowns
         function updateAccountDropdowns() {
             const accountNameSelect = document.getElementById('accountName');
             const accountType = document.getElementById('accountType').value;
@@ -1740,387 +1507,7 @@
             }
         }
 
-        function updateDateSelects() {
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            
-            if (!startDate || !endDate) return;
-            
-            const staffDateSelect = document.getElementById('staffDateSelect');
-            const supplierDateSelect = document.getElementById('supplierDateSelect');
-            
-            staffDateSelect.innerHTML = '';
-            supplierDateSelect.innerHTML = '';
-            
-            const currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                const dateStr = currentDate.toLocaleDateString();
-                const dateValue = currentDate.toISOString().split('T')[0];
-                
-                const option = document.createElement('option');
-                option.value = dateValue;
-                option.textContent = dateStr;
-                
-                staffDateSelect.appendChild(option.cloneNode(true));
-                supplierDateSelect.appendChild(option.cloneNode(true));
-                
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-        }
-
-        // ==================== REPORT GENERATION ====================
-        function generateReport() {
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            
-            if (!startDate || !endDate) {
-                alert('Please select both start and end dates');
-                return;
-            }
-            
-            if (startDate > endDate) {
-                alert('Start date cannot be after end date');
-                return;
-            }
-
-            generateDataInputs();
-
-            const tableBody = document.getElementById('tableBody');
-            tableBody.innerHTML = '';
-
-            const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            let weekTotals = {
-                shop: 0,
-                delivery: 0,
-                online: 0,
-                cardPayment: 0,
-                total: 0
-            };
-
-            const currentDate = new Date(startDate);
-            while (currentDate <= endDate) {
-                const dateKey = currentDate.toISOString().split('T')[0];
-                const savedData = localStorage.getItem(`salesData-${dateKey}`);
-                
-                let dayData;
-                if (savedData) {
-                    try {
-                        dayData = JSON.parse(savedData);
-                    } catch (e) {
-                        dayData = { shop: 0, delivery: 0, online: 0, cardPayment: 0 };
-                    }
-                } else {
-                    dayData = { shop: 0, delivery: 0, online: 0, cardPayment: 0 };
-                }
-                
-                const dayTotal = dayData.shop + dayData.delivery + dayData.online + dayData.cardPayment;
-                
-                const dayName = daysOfWeek[currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1];
-                const dateStr = currentDate.toLocaleDateString();
-                
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td class="day-header">${dayName}<br><small>${dateStr}</small></td>
-                    <td>${formatCurrency(dayData.shop)}</td>
-                    <td>${formatCurrency(dayData.delivery)}</td>
-                    <td>${formatCurrency(dayData.online)}</td>
-                    <td>${formatCurrency(dayData.cardPayment)}</td>
-                    <td class="day-total">${formatCurrency(dayTotal)}</td>
-                `;
-                
-                tableBody.appendChild(row);
-
-                weekTotals.shop += dayData.shop;
-                weekTotals.delivery += dayData.delivery;
-                weekTotals.online += dayData.online;
-                weekTotals.cardPayment += dayData.cardPayment;
-                weekTotals.total += dayTotal;
-
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-
-            const totalsRow = document.createElement('tr');
-            totalsRow.className = 'total-row';
-            totalsRow.innerHTML = `
-                <td><strong>GRAND TOTAL</strong></td>
-                <td><strong>${formatCurrency(weekTotals.shop)}</strong></td>
-                <td><strong>${formatCurrency(weekTotals.delivery)}</strong></td>
-                <td><strong>${formatCurrency(weekTotals.online)}</strong></td>
-                <td><strong>${formatCurrency(weekTotals.cardPayment)}</strong></td>
-                <td><strong>${formatCurrency(weekTotals.total)}</strong></td>
-            `;
-            tableBody.appendChild(totalsRow);
-            
-            renderStaffTable();
-            renderSupplierTable();
-            updateSummaryTable();
-            renderProfitSharingTable();
-        }
-
-        // ==================== STAFF & SUPPLIER TABLE FUNCTIONS ====================
-        function addStaffAssignment() {
-            const dateSelect = document.getElementById('staffDateSelect');
-            const staffSelect = document.getElementById('staffSelect');
-            const hoursInput = document.getElementById('staffHours');
-            const rateInput = document.getElementById('staffRate');
-            
-            const date = dateSelect.value;
-            const staff = staffSelect.value;
-            const hours = parseFloat(hoursInput.value) || 0;
-            const rate = parseFloat(rateInput.value) || 0;
-            
-            if (!date || !staff || hours <= 0 || rate <= 0) {
-                alert('Please select a date, staff member, and enter valid hours and rate');
-                return;
-            }
-            
-            let staffAssignments = getLocalStorageItem('staffAssignments', {});
-            if (!staffAssignments[date]) {
-                staffAssignments[date] = [];
-            }
-            
-            staffAssignments[date].push({
-                staff: staff,
-                hours: hours,
-                rate: rate,
-                cost: hours * rate
-            });
-            
-            localStorage.setItem('staffAssignments', JSON.stringify(staffAssignments));
-            
-            staffSelect.value = '';
-            hoursInput.value = '';
-            rateInput.value = '';
-            
-            renderStaffTable();
-            alert(`Added ${staff} for ${hours} hours at £${rate}/hour on ${new Date(date).toLocaleDateString()}`);
-        }
-
-        function renderStaffTable() {
-            const staffTableBody = document.getElementById('staffTableBody');
-            const staffTableFooter = document.getElementById('staffTableFooter');
-            staffTableBody.innerHTML = '';
-            staffTableFooter.innerHTML = '';
-            
-            const staffAssignments = getLocalStorageItem('staffAssignments', {});
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            
-            if (!startDate || !endDate) return;
-            
-            let grandTotalHours = 0;
-            let grandTotalCost = 0;
-            const currentDate = new Date(startDate);
-            
-            while (currentDate <= endDate) {
-                const dateKey = currentDate.toISOString().split('T')[0];
-                const dateStr = currentDate.toLocaleDateString();
-                
-                if (staffAssignments[dateKey] && staffAssignments[dateKey].length > 0) {
-                    let dailyTotalHours = 0;
-                    let dailyTotalCost = 0;
-                    
-                    staffAssignments[dateKey].forEach((assignment, index) => {
-                        const rate = assignment.rate || 15;
-                        const cost = assignment.cost || (assignment.hours * rate);
-                        
-                        dailyTotalHours += assignment.hours;
-                        dailyTotalCost += cost;
-                        
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${dateStr}</td>
-                            <td>${assignment.staff}</td>
-                            <td>${assignment.hours}</td>
-                            <td>£${rate.toFixed(2)}</td>
-                            <td>£${cost.toFixed(2)}</td>
-                            <td>${index === 0 ? `£${dailyTotalCost.toFixed(2)}` : ''}</td>
-                            <td>
-                                <button class="delete-btn" onclick="deleteStaffAssignment('${dateKey}', ${index})">Delete</button>
-                            </td>
-                        `;
-                        staffTableBody.appendChild(row);
-                    });
-                    
-                    if (staffAssignments[dateKey].length > 1) {
-                        const dailyTotalRow = document.createElement('tr');
-                        dailyTotalRow.className = 'date-total';
-                        dailyTotalRow.innerHTML = `
-                            <td colspan="2"><strong>${dateStr} Total</strong></td>
-                            <td><strong>${dailyTotalHours.toFixed(1)}</strong></td>
-                            <td></td>
-                            <td><strong>£${dailyTotalCost.toFixed(2)}</strong></td>
-                            <td></td>
-                            <td></td>
-                        `;
-                        staffTableBody.appendChild(dailyTotalRow);
-                    }
-                    
-                    grandTotalHours += dailyTotalHours;
-                    grandTotalCost += dailyTotalCost;
-                }
-                
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            if (grandTotalHours > 0) {
-                const grandTotalRow = document.createElement('tr');
-                grandTotalRow.className = 'grand-total';
-                grandTotalRow.innerHTML = `
-                    <td colspan="2"><strong>GRAND TOTAL</strong></td>
-                    <td><strong>${grandTotalHours.toFixed(1)} hours</strong></td>
-                    <td></td>
-                    <td><strong>£${grandTotalCost.toFixed(2)}</strong></td>
-                    <td></td>
-                    <td></td>
-                `;
-                staffTableFooter.appendChild(grandTotalRow);
-            }
-            
-            updateSummaryTable();
-            renderProfitSharingTable();
-        }
-
-        function deleteStaffAssignment(date, index) {
-            const staffAssignments = getLocalStorageItem('staffAssignments', {});
-            
-            if (staffAssignments[date] && staffAssignments[date][index]) {
-                if (confirm('Are you sure you want to delete this staff assignment?')) {
-                    staffAssignments[date].splice(index, 1);
-                    
-                    if (staffAssignments[date].length === 0) {
-                        delete staffAssignments[date];
-                    }
-                    
-                    localStorage.setItem('staffAssignments', JSON.stringify(staffAssignments));
-                    renderStaffTable();
-                }
-            }
-        }
-
-        function addSupplierOrder() {
-            const dateSelect = document.getElementById('supplierDateSelect');
-            const supplierSelect = document.getElementById('supplierSelect');
-            const amountInput = document.getElementById('supplierAmount');
-            
-            const date = dateSelect.value;
-            const supplier = supplierSelect.value;
-            const amount = parseFloat(amountInput.value) || 0;
-            
-            if (!date || !supplier || amount <= 0) {
-                alert('Please select a date, supplier, and enter valid amount');
-                return;
-            }
-            
-            let supplierOrders = getLocalStorageItem('supplierOrders', {});
-            if (!supplierOrders[date]) {
-                supplierOrders[date] = [];
-            }
-            
-            supplierOrders[date].push({
-                supplier: supplier,
-                amount: amount
-            });
-            
-            localStorage.setItem('supplierOrders', JSON.stringify(supplierOrders));
-            
-            supplierSelect.value = '';
-            amountInput.value = '';
-            
-            renderSupplierTable();
-            alert(`Added ${supplier} order for £${amount} on ${new Date(date).toLocaleDateString()}`);
-        }
-
-        function renderSupplierTable() {
-            const supplierTableBody = document.getElementById('supplierTableBody');
-            const supplierTableFooter = document.getElementById('supplierTableFooter');
-            supplierTableBody.innerHTML = '';
-            supplierTableFooter.innerHTML = '';
-            
-            const supplierOrders = getLocalStorageItem('supplierOrders', {});
-            const startDate = new Date(document.getElementById('startDate').value);
-            const endDate = new Date(document.getElementById('endDate').value);
-            
-            if (!startDate || !endDate) return;
-            
-            let grandTotalAmount = 0;
-            const currentDate = new Date(startDate);
-            
-            while (currentDate <= endDate) {
-                const dateKey = currentDate.toISOString().split('T')[0];
-                const dateStr = currentDate.toLocaleDateString();
-                
-                if (supplierOrders[dateKey] && supplierOrders[dateKey].length > 0) {
-                    let dailyTotalAmount = 0;
-                    
-                    supplierOrders[dateKey].forEach((order, index) => {
-                        dailyTotalAmount += order.amount;
-                        
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${dateStr}</td>
-                            <td>${order.supplier}</td>
-                            <td>£${order.amount.toLocaleString()}</td>
-                            <td>${index === 0 ? '£' + dailyTotalAmount.toLocaleString() : ''}</td>
-                            <td>
-                                <button class="delete-btn" onclick="deleteSupplierOrder('${dateKey}', ${index})">Delete</button>
-                            </td>
-                        `;
-                        supplierTableBody.appendChild(row);
-                    });
-                    
-                    if (supplierOrders[dateKey].length > 1) {
-                        const dailyTotalRow = document.createElement('tr');
-                        dailyTotalRow.className = 'date-total';
-                        dailyTotalRow.innerHTML = `
-                            <td colspan="2"><strong>${dateStr} Total</strong></td>
-                            <td><strong>£${dailyTotalAmount.toLocaleString()}</strong></td>
-                            <td></td>
-                            <td></td>
-                        `;
-                        supplierTableBody.appendChild(dailyTotalRow);
-                    }
-                    
-                    grandTotalAmount += dailyTotalAmount;
-                }
-                
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            
-            if (grandTotalAmount > 0) {
-                const grandTotalRow = document.createElement('tr');
-                grandTotalRow.className = 'grand-total';
-                grandTotalRow.innerHTML = `
-                    <td colspan="2"><strong>GRAND TOTAL AMOUNT</strong></td>
-                    <td><strong>£${grandTotalAmount.toLocaleString()}</strong></td>
-                    <td></td>
-                    <td></td>
-                `;
-                supplierTableFooter.appendChild(grandTotalRow);
-            }
-            
-            updateSummaryTable();
-            renderProfitSharingTable();
-        }
-
-        function deleteSupplierOrder(date, index) {
-            const supplierOrders = getLocalStorageItem('supplierOrders', {});
-            
-            if (supplierOrders[date] && supplierOrders[date][index]) {
-                if (confirm('Are you sure you want to delete this supplier order?')) {
-                    supplierOrders[date].splice(index, 1);
-                    
-                    if (supplierOrders[date].length === 0) {
-                        delete supplierOrders[date];
-                    }
-                    
-                    localStorage.setItem('supplierOrders', JSON.stringify(supplierOrders));
-                    renderSupplierTable();
-                }
-            }
-        }
-
-        // ==================== ACCOUNT FUNCTIONS ====================
+        // Load individual account
         function loadAccount() {
             const accountType = document.getElementById('accountType').value;
             const accountName = document.getElementById('accountName').value;
@@ -2142,6 +1529,7 @@
             const accountTableBody = document.getElementById('accountTableBody');
             const accountTableFooter = document.getElementById('accountTableFooter');
             
+            // Clear previous data
             accountSummary.innerHTML = '';
             accountTableBody.innerHTML = '';
             accountTableFooter.innerHTML = '';
@@ -2151,7 +1539,8 @@
             let transactionCount = 0;
             
             if (accountType === 'staff') {
-                const staffAssignments = getLocalStorageItem('staffAssignments', {});
+                // Load staff account
+                const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
                 const currentDate = new Date(startDate);
                 
                 while (currentDate <= new Date(endDate)) {
@@ -2185,6 +1574,7 @@
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
                 
+                // Update summary
                 accountSummary.innerHTML = `
                     <div class="summary-item">
                         <div class="summary-value">${totalHours.toFixed(1)}</div>
@@ -2201,7 +1591,8 @@
                 `;
                 
             } else {
-                const supplierOrders = getLocalStorageItem('supplierOrders', {});
+                // Load supplier account
+                const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
                 const currentDate = new Date(startDate);
                 
                 while (currentDate <= new Date(endDate)) {
@@ -2231,6 +1622,7 @@
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
                 
+                // Update summary
                 accountSummary.innerHTML = `
                     <div class="summary-item">
                         <div class="summary-value">${transactionCount}</div>
@@ -2243,6 +1635,7 @@
                 `;
             }
             
+            // Add totals row
             const totalsRow = document.createElement('tr');
             totalsRow.className = 'total-row';
             totalsRow.innerHTML = `
@@ -2252,9 +1645,11 @@
             `;
             accountTableFooter.appendChild(totalsRow);
             
+            // Show account details
             accountDetails.style.display = 'block';
         }
 
+        // Share account statement
         function shareAccount() {
             const accountType = document.getElementById('accountType').value;
             const accountName = document.getElementById('accountName').value;
@@ -2265,7 +1660,7 @@
             let totalAmount = 0;
             
             if (accountType === 'staff') {
-                const staffAssignments = getLocalStorageItem('staffAssignments', {});
+                const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
                 const currentDate = new Date(startDate);
                 
                 accountData = `STAFF ACCOUNT STATEMENT\n`;
@@ -2296,7 +1691,7 @@
                 accountData += `\nTOTAL PAYABLE: £${totalAmount.toFixed(2)}`;
                 
             } else {
-                const supplierOrders = getLocalStorageItem('supplierOrders', {});
+                const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
                 const currentDate = new Date(startDate);
                 
                 accountData = `SUPPLIER ACCOUNT STATEMENT\n`;
@@ -2324,6 +1719,7 @@
                 accountData += `\nTOTAL PAYABLE: £${totalAmount.toFixed(2)}`;
             }
             
+            // Create and download file
             const blob = new Blob([accountData], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2338,7 +1734,411 @@
             alert(`Account statement for ${accountName} downloaded!`);
         }
 
-        // ==================== SUMMARY & PROFIT FUNCTIONS ====================
+        // Update date selects for staff and supplier tables
+        function updateDateSelects() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (!startDate || !endDate) return;
+            
+            const staffDateSelect = document.getElementById('staffDateSelect');
+            const supplierDateSelect = document.getElementById('supplierDateSelect');
+            
+            staffDateSelect.innerHTML = '';
+            supplierDateSelect.innerHTML = '';
+            
+            const currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const dateStr = currentDate.toLocaleDateString();
+                const dateValue = currentDate.toISOString().split('T')[0];
+                
+                const option = document.createElement('option');
+                option.value = dateValue;
+                option.textContent = dateStr;
+                
+                staffDateSelect.appendChild(option.cloneNode(true));
+                supplierDateSelect.appendChild(option.cloneNode(true));
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+        }
+
+        // Generate input fields for each day in the date range
+        function generateDataInputs() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (!startDate || !endDate) return;
+            
+            const dataInputsContainer = document.getElementById('dataInputs');
+            dataInputsContainer.innerHTML = '';
+            
+            const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            
+            // Generate inputs for each day in the date range
+            const currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const dayName = daysOfWeek[currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1];
+                const dateStr = currentDate.toLocaleDateString();
+                const dateKey = currentDate.toISOString().split('T')[0];
+                
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'data-row';
+                dayContainer.innerHTML = `
+                    <div class="data-label">${dayName} (${dateStr})</div>
+                    <input type="number" class="data-input" id="shop-${dateKey}" placeholder="Shop" min="0">
+                    <input type="number" class="data-input" id="delivery-${dateKey}" placeholder="Delivery" min="0">
+                    <input type="number" class="data-input" id="online-${dateKey}" placeholder="Online" min="0">
+                    <input type="number" class="data-input" id="card-${dateKey}" placeholder="Card Payment" min="0">
+                    <button class="save-btn" onclick="saveDayData('${dateKey}')">Save</button>
+                `;
+                
+                dataInputsContainer.appendChild(dayContainer);
+                
+                // Load any previously saved data
+                loadSavedData(dateKey);
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Update date selects for staff and supplier tables
+            updateDateSelects();
+        }
+
+        // Save data for a specific day to localStorage
+        function saveDayData(dateKey) {
+            const shop = document.getElementById(`shop-${dateKey}`).value || 0;
+            const delivery = document.getElementById(`delivery-${dateKey}`).value || 0;
+            const online = document.getElementById(`online-${dateKey}`).value || 0;
+            const card = document.getElementById(`card-${dateKey}`).value || 0;
+            
+            const dayData = {
+                shop: parseFloat(shop),
+                delivery: parseFloat(delivery),
+                online: parseFloat(online),
+                cardPayment: parseFloat(card)
+            };
+            
+            localStorage.setItem(`salesData-${dateKey}`, JSON.stringify(dayData));
+            alert('Sales data saved for ' + new Date(dateKey).toLocaleDateString());
+        }
+
+        // Load saved data for a specific day
+        function loadSavedData(dateKey) {
+            const savedData = localStorage.getItem(`salesData-${dateKey}`);
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.getElementById(`shop-${dateKey}`).value = data.shop;
+                document.getElementById(`delivery-${dateKey}`).value = data.delivery;
+                document.getElementById(`online-${dateKey}`).value = data.online;
+                document.getElementById(`card-${dateKey}`).value = data.cardPayment;
+            }
+        }
+
+        // Add staff assignment
+        function addStaffAssignment() {
+            const dateSelect = document.getElementById('staffDateSelect');
+            const staffSelect = document.getElementById('staffSelect');
+            const hoursInput = document.getElementById('staffHours');
+            const rateInput = document.getElementById('staffRate');
+            
+            const date = dateSelect.value;
+            const staff = staffSelect.value;
+            const hours = parseFloat(hoursInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            
+            if (!date || !staff || hours <= 0 || rate <= 0) {
+                alert('Please select a date, staff member, and enter valid hours and rate');
+                return;
+            }
+            
+            // Get existing staff assignments
+            let staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+            if (!staffAssignments[date]) {
+                staffAssignments[date] = [];
+            }
+            
+            // Add new assignment
+            staffAssignments[date].push({
+                staff: staff,
+                hours: hours,
+                rate: rate,
+                cost: hours * rate
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('staffAssignments', JSON.stringify(staffAssignments));
+            
+            // Clear inputs
+            staffSelect.value = '';
+            hoursInput.value = '';
+            rateInput.value = '';
+            
+            // Update staff table
+            renderStaffTable();
+            
+            alert(`Added ${staff} for ${hours} hours at £${rate}/hour on ${new Date(date).toLocaleDateString()}`);
+        }
+
+        // Render staff table - FIXED VERSION
+        function renderStaffTable() {
+            const staffTableBody = document.getElementById('staffTableBody');
+            const staffTableFooter = document.getElementById('staffTableFooter');
+            staffTableBody.innerHTML = '';
+            staffTableFooter.innerHTML = '';
+            
+            const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+            
+            // Get all dates from the current date range
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (!startDate || !endDate) return;
+            
+            let grandTotalHours = 0;
+            let grandTotalCost = 0;
+            const currentDate = new Date(startDate);
+            
+            while (currentDate <= endDate) {
+                const dateKey = currentDate.toISOString().split('T')[0];
+                const dateStr = currentDate.toLocaleDateString();
+                
+                if (staffAssignments[dateKey] && staffAssignments[dateKey].length > 0) {
+                    let dailyTotalHours = 0;
+                    let dailyTotalCost = 0;
+                    
+                    staffAssignments[dateKey].forEach((assignment, index) => {
+                        // Handle old data format (without rate property)
+                        const rate = assignment.rate || 15; // Default to £15 if rate doesn't exist
+                        const cost = assignment.cost || (assignment.hours * rate); // Calculate cost if it doesn't exist
+                        
+                        dailyTotalHours += assignment.hours;
+                        dailyTotalCost += cost;
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${dateStr}</td>
+                            <td>${assignment.staff}</td>
+                            <td>${assignment.hours}</td>
+                            <td>£${rate.toFixed(2)}</td>
+                            <td>£${cost.toFixed(2)}</td>
+                            <td>${index === 0 ? `£${dailyTotalCost.toFixed(2)}` : ''}</td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteStaffAssignment('${dateKey}', ${index})">Delete</button>
+                            </td>
+                        `;
+                        staffTableBody.appendChild(row);
+                    });
+                    
+                    // Add daily total row
+                    if (staffAssignments[dateKey].length > 1) {
+                        const dailyTotalRow = document.createElement('tr');
+                        dailyTotalRow.className = 'date-total';
+                        dailyTotalRow.innerHTML = `
+                            <td colspan="2"><strong>${dateStr} Total</strong></td>
+                            <td><strong>${dailyTotalHours.toFixed(1)}</strong></td>
+                            <td></td>
+                            <td><strong>£${dailyTotalCost.toFixed(2)}</strong></td>
+                            <td></td>
+                            <td></td>
+                        `;
+                        staffTableBody.appendChild(dailyTotalRow);
+                    }
+                    
+                    grandTotalHours += dailyTotalHours;
+                    grandTotalCost += dailyTotalCost;
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Add grand total row
+            if (grandTotalHours > 0) {
+                const grandTotalRow = document.createElement('tr');
+                grandTotalRow.className = 'grand-total';
+                grandTotalRow.innerHTML = `
+                    <td colspan="2"><strong>GRAND TOTAL</strong></td>
+                    <td><strong>${grandTotalHours.toFixed(1)} hours</strong></td>
+                    <td></td>
+                    <td><strong>£${grandTotalCost.toFixed(2)}</strong></td>
+                    <td></td>
+                    <td></td>
+                `;
+                staffTableFooter.appendChild(grandTotalRow);
+            }
+            
+            // Update summary table and profit sharing
+            updateSummaryTable();
+            renderProfitSharingTable();
+        }
+
+        // Delete staff assignment
+        function deleteStaffAssignment(date, index) {
+            const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
+            
+            if (staffAssignments[date] && staffAssignments[date][index]) {
+                if (confirm('Are you sure you want to delete this staff assignment?')) {
+                    staffAssignments[date].splice(index, 1);
+                    
+                    // If no assignments left for this date, remove the date entry
+                    if (staffAssignments[date].length === 0) {
+                        delete staffAssignments[date];
+                    }
+                    
+                    localStorage.setItem('staffAssignments', JSON.stringify(staffAssignments));
+                    renderStaffTable();
+                }
+            }
+        }
+
+        // Add supplier order
+        function addSupplierOrder() {
+            const dateSelect = document.getElementById('supplierDateSelect');
+            const supplierSelect = document.getElementById('supplierSelect');
+            const amountInput = document.getElementById('supplierAmount');
+            
+            const date = dateSelect.value;
+            const supplier = supplierSelect.value;
+            const amount = parseFloat(amountInput.value) || 0;
+            
+            if (!date || !supplier || amount <= 0) {
+                alert('Please select a date, supplier, and enter valid amount');
+                return;
+            }
+            
+            // Get existing supplier orders
+            let supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
+            if (!supplierOrders[date]) {
+                supplierOrders[date] = [];
+            }
+            
+            // Add new order
+            supplierOrders[date].push({
+                supplier: supplier,
+                amount: amount
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('supplierOrders', JSON.stringify(supplierOrders));
+            
+            // Clear inputs
+            supplierSelect.value = '';
+            amountInput.value = '';
+            
+            // Update supplier table
+            renderSupplierTable();
+            
+            alert(`Added ${supplier} order for £${amount} on ${new Date(date).toLocaleDateString()}`);
+        }
+
+        // Render supplier table
+        function renderSupplierTable() {
+            const supplierTableBody = document.getElementById('supplierTableBody');
+            const supplierTableFooter = document.getElementById('supplierTableFooter');
+            supplierTableBody.innerHTML = '';
+            supplierTableFooter.innerHTML = '';
+            
+            const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
+            
+            // Get all dates from the current date range
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (!startDate || !endDate) return;
+            
+            let grandTotalAmount = 0;
+            const currentDate = new Date(startDate);
+            
+            while (currentDate <= endDate) {
+                const dateKey = currentDate.toISOString().split('T')[0];
+                const dateStr = currentDate.toLocaleDateString();
+                
+                if (supplierOrders[dateKey] && supplierOrders[dateKey].length > 0) {
+                    let dailyTotalAmount = 0;
+                    
+                    supplierOrders[dateKey].forEach((order, index) => {
+                        dailyTotalAmount += order.amount;
+                        
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${dateStr}</td>
+                            <td>${order.supplier}</td>
+                            <td>£${order.amount.toLocaleString()}</td>
+                            <td>${index === 0 ? '£' + dailyTotalAmount.toLocaleString() : ''}</td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteSupplierOrder('${dateKey}', ${index})">Delete</button>
+                            </td>
+                        `;
+                        supplierTableBody.appendChild(row);
+                    });
+                    
+                    // Add daily total row
+                    if (supplierOrders[dateKey].length > 1) {
+                        const dailyTotalRow = document.createElement('tr');
+                        dailyTotalRow.className = 'date-total';
+                        dailyTotalRow.innerHTML = `
+                            <td colspan="2"><strong>${dateStr} Total</strong></td>
+                            <td><strong>£${dailyTotalAmount.toLocaleString()}</strong></td>
+                            <td></td>
+                            <td></td>
+                        `;
+                        supplierTableBody.appendChild(dailyTotalRow);
+                    }
+                    
+                    grandTotalAmount += dailyTotalAmount;
+                }
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            // Add grand total row
+            if (grandTotalAmount > 0) {
+                const grandTotalRow = document.createElement('tr');
+                grandTotalRow.className = 'grand-total';
+                grandTotalRow.innerHTML = `
+                    <td colspan="2"><strong>GRAND TOTAL AMOUNT</strong></td>
+                    <td><strong>£${grandTotalAmount.toLocaleString()}</strong></td>
+                    <td></td>
+                    <td></td>
+                `;
+                supplierTableFooter.appendChild(grandTotalRow);
+            }
+            
+            // Update summary table and profit sharing
+            updateSummaryTable();
+            renderProfitSharingTable();
+        }
+
+        // Delete supplier order
+        function deleteSupplierOrder(date, index) {
+            const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
+            
+            if (supplierOrders[date] && supplierOrders[date][index]) {
+                if (confirm('Are you sure you want to delete this supplier order?')) {
+                    supplierOrders[date].splice(index, 1);
+                    
+                    // If no orders left for this date, remove the date entry
+                    if (supplierOrders[date].length === 0) {
+                        delete supplierOrders[date];
+                    }
+                    
+                    localStorage.setItem('supplierOrders', JSON.stringify(supplierOrders));
+                    renderSupplierTable();
+                }
+            }
+        }
+
+        // Calculate total for a day
+        function calculateTotal(data) {
+            return data.shop + data.delivery + data.online + data.cardPayment;
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return '£' + amount.toLocaleString();
+        }
+
+        // Calculate total sales from the sales table - FIXED: Only within date range
         function getTotalSales() {
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
@@ -2353,12 +2153,8 @@
                 const savedData = localStorage.getItem(`salesData-${dateKey}`);
                 
                 if (savedData) {
-                    try {
-                        const data = JSON.parse(savedData);
-                        totalSales += data.shop + data.delivery + data.online + data.cardPayment;
-                    } catch (e) {
-                        console.error(`Error parsing sales data for ${dateKey}:`, e);
-                    }
+                    const data = JSON.parse(savedData);
+                    totalSales += calculateTotal(data);
                 }
                 
                 currentDate.setDate(currentDate.getDate() + 1);
@@ -2367,8 +2163,9 @@
             return totalSales;
         }
 
+        // Calculate total staff cost (now based on individual rates) - FIXED: Only within date range
         function getTotalStaffCost() {
-            const staffAssignments = getLocalStorageItem('staffAssignments', {});
+            const staffAssignments = JSON.parse(localStorage.getItem('staffAssignments')) || {};
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             
@@ -2382,8 +2179,9 @@
                 
                 if (staffAssignments[dateKey]) {
                     staffAssignments[dateKey].forEach(assignment => {
-                        const rate = assignment.rate || 15;
-                        const cost = assignment.cost || (assignment.hours * rate);
+                        // Handle old data format
+                        const rate = assignment.rate || 15; // Default to £15 if rate doesn't exist
+                        const cost = assignment.cost || (assignment.hours * rate); // Calculate cost if it doesn't exist
                         totalCost += cost;
                     });
                 }
@@ -2394,8 +2192,9 @@
             return totalCost;
         }
 
+        // Calculate total supplier cost - FIXED: Only within date range
         function getTotalSupplierCost() {
-            const supplierOrders = getLocalStorageItem('supplierOrders', {});
+            const supplierOrders = JSON.parse(localStorage.getItem('supplierOrders')) || {};
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             
@@ -2419,6 +2218,7 @@
             return totalCost;
         }
 
+        // Calculate net profit
         function getNetProfit() {
             const totalSales = getTotalSales();
             const totalStaffCost = getTotalStaffCost();
@@ -2426,6 +2226,7 @@
             return totalSales - totalStaffCost - totalSupplierCost;
         }
 
+        // Update summary table
         function updateSummaryTable() {
             const summaryTableBody = document.getElementById('summaryTableBody');
             summaryTableBody.innerHTML = '';
@@ -2436,6 +2237,7 @@
             const totalExpenses = totalStaffCost + totalSupplierCost;
             const profit = getNetProfit();
             
+            // Add rows to summary table
             const rows = [
                 { description: 'Total Sales', amount: totalSales, notes: 'From sales report' },
                 { description: 'Staff Costs', amount: -totalStaffCost, notes: 'Based on hours worked with individual rates' },
@@ -2460,7 +2262,7 @@
             });
         }
 
-        // ==================== PARTNER & PROFIT SHARING FUNCTIONS ====================
+        // Update partner percentage
         function updatePartnerPercentage() {
             const percentageInput = document.getElementById('partnerPercentage');
             const newPercentage = parseFloat(percentageInput.value) || 0;
@@ -2476,6 +2278,7 @@
             alert(`Partner profit sharing percentage updated to ${partnerPercentage}%`);
         }
 
+        // Render profit sharing table
         function renderProfitSharingTable() {
             const profitSharingBody = document.getElementById('profitSharingBody');
             const profitSharingFooter = document.getElementById('profitSharingFooter');
@@ -2487,6 +2290,7 @@
             const ownerShare = netProfit - partnerShare;
             
             if (partners.length > 0) {
+                // Calculate share per partner
                 const sharePerPartner = partnerShare / partners.length;
                 
                 partners.forEach(partner => {
@@ -2499,6 +2303,7 @@
                     profitSharingBody.appendChild(row);
                 });
                 
+                // Add totals row
                 const totalsRow = document.createElement('tr');
                 totalsRow.className = 'total-row';
                 totalsRow.innerHTML = `
@@ -2508,6 +2313,7 @@
                 `;
                 profitSharingFooter.appendChild(totalsRow);
                 
+                // Add owner share row
                 const ownerRow = document.createElement('tr');
                 ownerRow.className = 'profit-row';
                 ownerRow.innerHTML = `
@@ -2527,6 +2333,7 @@
             }
         }
 
+        // Render partner list
         function renderPartnerList() {
             const partnerList = document.getElementById('partnerList');
             partnerList.innerHTML = '';
@@ -2546,10 +2353,14 @@
                 partnerList.appendChild(listItem);
             });
             
+            // Save to localStorage
             localStorage.setItem('partners', JSON.stringify(partners));
+            
+            // Update profit sharing table
             renderProfitSharingTable();
         }
 
+        // Add partner
         function addPartner() {
             const partnerEmail = document.getElementById('partnerEmail').value.trim();
             
@@ -2567,6 +2378,7 @@
             }
         }
 
+        // Delete partner
         function deletePartner(index) {
             if (confirm(`Are you sure you want to remove ${partners[index]} from the partner list?`)) {
                 partners.splice(index, 1);
@@ -2574,7 +2386,107 @@
             }
         }
 
-        // ==================== SHARING FUNCTIONS ====================
+        // Generate the report
+        function generateReport() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            
+            if (!startDate || !endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            if (startDate > endDate) {
+                alert('Start date cannot be after end date');
+                return;
+            }
+
+            // Regenerate input fields if date range changed
+            generateDataInputs();
+
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            let weekTotals = {
+                shop: 0,
+                delivery: 0,
+                online: 0,
+                cardPayment: 0,
+                total: 0
+            };
+
+            // Generate data for each day in the date range
+            const currentDate = new Date(startDate);
+            while (currentDate <= endDate) {
+                const dateKey = currentDate.toISOString().split('T')[0];
+                const savedData = localStorage.getItem(`salesData-${dateKey}`);
+                
+                let dayData;
+                if (savedData) {
+                    dayData = JSON.parse(savedData);
+                } else {
+                    // If no saved data, use defaults
+                    dayData = {
+                        shop: 0,
+                        delivery: 0,
+                        online: 0,
+                        cardPayment: 0
+                    };
+                }
+                
+                const dayTotal = calculateTotal(dayData);
+                
+                const row = document.createElement('tr');
+                
+                // Day name and date
+                const dayName = daysOfWeek[currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1];
+                const dateStr = currentDate.toLocaleDateString();
+                
+                row.innerHTML = `
+                    <td class="day-header">${dayName}<br><small>${dateStr}</small></td>
+                    <td>${formatCurrency(dayData.shop)}</td>
+                    <td>${formatCurrency(dayData.delivery)}</td>
+                    <td>${formatCurrency(dayData.online)}</td>
+                    <td>${formatCurrency(dayData.cardPayment)}</td>
+                    <td class="day-total">${formatCurrency(dayTotal)}</td>
+                `;
+                
+                tableBody.appendChild(row);
+
+                // Update week totals
+                weekTotals.shop += dayData.shop;
+                weekTotals.delivery += dayData.delivery;
+                weekTotals.online += dayData.online;
+                weekTotals.cardPayment += dayData.cardPayment;
+                weekTotals.total += dayTotal;
+
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+
+            // Add totals row
+            const totalsRow = document.createElement('tr');
+            totalsRow.className = 'total-row';
+            totalsRow.innerHTML = `
+                <td><strong>GRAND TOTAL</strong></td>
+                <td><strong>${formatCurrency(weekTotals.shop)}</strong></td>
+                <td><strong>${formatCurrency(weekTotals.delivery)}</strong></td>
+                <td><strong>${formatCurrency(weekTotals.online)}</strong></td>
+                <td><strong>${formatCurrency(weekTotals.cardPayment)}</strong></td>
+                <td><strong>${formatCurrency(weekTotals.total)}</strong></td>
+            `;
+            tableBody.appendChild(totalsRow);
+            
+            // Update staff and supplier tables
+            renderStaffTable();
+            renderSupplierTable();
+            
+            // Update summary table and profit sharing
+            updateSummaryTable();
+            renderProfitSharingTable();
+        }
+
+        // Help Section Functions
         function openHelp() {
             document.getElementById('helpSection').style.display = 'block';
         }
@@ -2583,6 +2495,7 @@
             document.getElementById('helpSection').style.display = 'none';
         }
 
+        // Share Modal Functions
         function openShareModal() {
             document.getElementById('shareModal').style.display = 'block';
         }
@@ -2591,6 +2504,7 @@
             document.getElementById('shareModal').style.display = 'none';
         }
 
+        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('shareModal');
             if (event.target === modal) {
@@ -2598,6 +2512,7 @@
             }
         }
 
+        // Enhanced Sharing Functions
         function shareViaEmail() {
             const reportData = generateReportData();
             const subject = `Business Report - ${reportData.startDate} to ${reportData.endDate}`;
@@ -2685,27 +2600,15 @@
             return report;
         }
 
-        // ==================== INITIALIZATION ====================
+        // Update account dropdown when type changes
         document.getElementById('accountType').addEventListener('change', updateAccountDropdowns);
 
+        // Initialize the app
         window.onload = function() {
-            console.log("Loading dashboard with data recovery...");
-            
-            // Run data integrity check first
-            recoverLocalStorageData();
-            
-            // Initialize dashboard
             setDefaultDates();
+            generateReport();
             
-            try {
-                generateReport();
-            } catch (e) {
-                console.error("Error generating report:", e);
-                document.getElementById('recoveryStatus').innerHTML = 
-                    '<span style="color: #e74c3c;">Error loading report data. Try using "Check Data Integrity".</span>';
-            }
-            
-            // Event listeners
+            // Update inputs when date range changes
             document.getElementById('startDate').addEventListener('change', function() {
                 generateDataInputs();
             });
@@ -2714,9 +2617,9 @@
                 generateDataInputs();
             });
 
+            // Save clock sessions before page unload
             window.addEventListener('beforeunload', function() {
-                stopClockTimer();
-                console.log("Page unloading - saving state");
+                // Sessions are automatically saved every second by the timer
             });
         };
     </script>
